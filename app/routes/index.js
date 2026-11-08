@@ -26,6 +26,9 @@ const notFound = (req, res) => {
     });
 };
 
+// A field counts as filled in when it's text with more than just spaces.
+const isFilled = (value) => typeof value === 'string' && value.trim() !== '';
+
 // 400 response for POST and PUT requests whose body has no name.
 const nameRequired = (req, res) => {
     res.status(400).json({
@@ -70,7 +73,7 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
     // req.body is undefined when no JSON body is sent, so fall back to {}.
     const { name, email } = req.body ?? {};
-    if (!name) return nameRequired(req, res);
+    if (!isFilled(name)) return nameRequired(req, res);
 
     const user = createUser({ name, email });
 
@@ -91,7 +94,7 @@ router.put("/:id", (req, res) => {
     if (!getUserById(id)) return notFound(req, res);
 
     const { name, email } = req.body ?? {};
-    if (!name) return nameRequired(req, res);
+    if (!isFilled(name)) return nameRequired(req, res);
 
     const user = updateUser(id, { name, email });
 

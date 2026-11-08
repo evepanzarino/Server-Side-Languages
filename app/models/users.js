@@ -27,7 +27,8 @@ const saveUsers = (users) => {
 
 // URL params are always strings ("45"), so convert to a number before
 // comparing with the numeric IDs in the file.
-const hasId = (id) => (user) => user.id === Number(id);
+// Only whole numbers like "45" count, so "0x2d" or "45.0" don't match user 45.
+const hasId = (id) => (user) => /^\d+$/.test(String(id)) && user.id === Number(id);
 
 // 1. Read: every user in the file.
 const getUsers = () => loadUsers();

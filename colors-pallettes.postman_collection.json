@@ -1,0 +1,1752 @@
+{
+  "info": {
+    "name": "Colors and Pallettes API",
+    "description": "CRUD requests for the pallettes and colors MongoDB collections. A color has a pallette: POST create color sends the _id of a pallette in the first collection, and every color payload shows that pallette with populate().\n\nStart the server with `npm run dev`, then run the collection from top to bottom (or use the Collection Runner). POST create pallette saves the new _id in {{palletteId}} and POST create color saves {{colorId}}, so the requests after them use those IDs. Every run uses a new pallette name and the last folder deletes that pallette, so the collection can be run again.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "missingId",
+      "value": "000000000000000000000000"
+    },
+    {
+      "key": "palletteName",
+      "value": ""
+    },
+    {
+      "key": "palletteId",
+      "value": ""
+    },
+    {
+      "key": "colorId",
+      "value": ""
+    },
+    {
+      "key": "secondColorId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Pallettes",
+      "description": "GET, GET by ID, POST and PUT for /pallettes, the first collection. DELETE is in the last folder, after the color requests have used this pallette.",
+      "item": [
+        {
+          "name": "POST create pallette",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{palletteName}}\",\n  \"Description\": \"Warm sunset colors\",\n  \"colorTypes\": \"red, orange\",\n  \"hexcodes\": \"#ff4500, #ffa500\",\n  \"NumberofColors\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Pallette names are unique, so each run needs a new name.",
+                  "pm.collectionVariables.set(\"palletteName\", \"Sunset \" + Date.now());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 201\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Pallette created\");",
+                  "});",
+                  "",
+                  "pm.test(\"Pallette has the posted fields\", () => {",
+                  "    pm.expect(res.data.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "    pm.expect(res.data.Description).to.eql(\"Warm sunset colors\");",
+                  "    pm.expect(res.data.colorTypes).to.eql(\"red, orange\");",
+                  "    pm.expect(res.data.hexcodes).to.eql(\"#ff4500, #ffa500\");",
+                  "    pm.expect(res.data.NumberofColors).to.eql(2);",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "});",
+                  "",
+                  "// Save the new pallette's _id so the requests below use it.",
+                  "if (res.data) {",
+                  "    pm.collectionVariables.set(\"palletteId\", res.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET all pallettes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pallettes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Get all pallettes\");",
+                  "});",
+                  "",
+                  "pm.test(\"List includes the new pallette\", () => {",
+                  "    pm.expect(res.data.map((p) => p._id)).to.include(pm.collectionVariables.get(\"palletteId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out of every item\", () => {",
+                  "    res.data.forEach((item) => pm.expect(item).to.not.have.property(\"__v\"));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET pallette by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{palletteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{palletteId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Get pallette by ID\");",
+                  "});",
+                  "",
+                  "pm.test(\"Output shows the ID\", () => {",
+                  "    pm.expect(res.id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"Pallette has a color list\", () => {",
+                  "    pm.expect(res.data.color).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT update pallette by ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"NumberofColors\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{palletteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{palletteId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Pallette updated\");",
+                  "});",
+                  "",
+                  "pm.test(\"Output shows the ID\", () => {",
+                  "    pm.expect(res.id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"NumberofColors changed and name stayed the same\", () => {",
+                  "    pm.expect(res.data.NumberofColors).to.eql(3);",
+                  "    pm.expect(res.data.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Colors",
+      "description": "The 5 CRUD requests for /colors, the second collection. POST sends the _id of the pallette saved in {{palletteId}}, and every payload shows that pallette with populate() and leaves out __v with select().",
+      "item": [
+        {
+          "name": "POST create color",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sunset Red\",\n  \"primaryColorType\": [\n    \"Red\",\n    \"orange\"\n  ],\n  \"hexcode\": \"#ff4500\",\n  \"opacity\": 80,\n  \"pallette\": \"{{palletteId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 201\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Color created\");",
+                  "});",
+                  "",
+                  "pm.test(\"Color has the posted fields\", () => {",
+                  "    pm.expect(res.data.name).to.eql(\"Sunset Red\");",
+                  "    // The body sends \"Red\", and the schema saves it in lowercase.",
+                  "    pm.expect(res.data.primaryColorType).to.eql([\"red\", \"orange\"]);",
+                  "    pm.expect(res.data.hexcode).to.eql(\"#ff4500\");",
+                  "    pm.expect(res.data.opacity).to.eql(80);",
+                  "});",
+                  "",
+                  "pm.test(\"populate() shows the pallette from the first collection\", () => {",
+                  "    const pallette = res.data.pallette;",
+                  "    pm.expect(pallette._id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "    pm.expect(pallette.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "    pm.expect(pallette.Description).to.eql(\"Warm sunset colors\");",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out of the color and its pallette\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "    pm.expect(res.data.pallette).to.not.have.property(\"__v\");",
+                  "});",
+                  "",
+                  "// Save the new color's _id so the requests below use it.",
+                  "if (res.data) {",
+                  "    pm.collectionVariables.set(\"colorId\", res.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET all colors",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/colors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Get all colors\");",
+                  "});",
+                  "",
+                  "pm.test(\"List includes the new color with its pallette\", () => {",
+                  "    const sunsetRed = res.data.find((c) => c._id === pm.collectionVariables.get(\"colorId\"));",
+                  "    pm.expect(sunsetRed.name).to.eql(\"Sunset Red\");",
+                  "    pm.expect(sunsetRed.pallette.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "});",
+                  "",
+                  "pm.test(\"populate() and select() were used on every item\", () => {",
+                  "    res.data.forEach((color) => {",
+                  "        pm.expect(color).to.not.have.property(\"__v\");",
+                  "        pm.expect(color.pallette).to.be.an(\"object\");",
+                  "        pm.expect(color.pallette).to.not.have.property(\"__v\");",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET color by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/colors/{{colorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors",
+                "{{colorId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Get color by ID\");",
+                  "});",
+                  "",
+                  "pm.test(\"Output shows the ID\", () => {",
+                  "    pm.expect(res.id).to.eql(pm.collectionVariables.get(\"colorId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"Output is the requested color\", () => {",
+                  "    pm.expect(res.data._id).to.eql(pm.collectionVariables.get(\"colorId\"));",
+                  "    pm.expect(res.data.name).to.eql(\"Sunset Red\");",
+                  "});",
+                  "",
+                  "pm.test(\"populate() shows the pallette from the first collection\", () => {",
+                  "    const pallette = res.data.pallette;",
+                  "    pm.expect(pallette._id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "    pm.expect(pallette.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "    pm.expect(pallette.Description).to.eql(\"Warm sunset colors\");",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out of the color and its pallette\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "    pm.expect(res.data.pallette).to.not.have.property(\"__v\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT update color by ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hexcode\": \"#ff6347\",\n  \"opacity\": 50\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors/{{colorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors",
+                "{{colorId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Color updated\");",
+                  "});",
+                  "",
+                  "pm.test(\"Output shows the ID\", () => {",
+                  "    pm.expect(res.id).to.eql(pm.collectionVariables.get(\"colorId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"hexcode and opacity changed and name stayed the same\", () => {",
+                  "    pm.expect(res.data.hexcode).to.eql(\"#ff6347\");",
+                  "    pm.expect(res.data.opacity).to.eql(50);",
+                  "    pm.expect(res.data.name).to.eql(\"Sunset Red\");",
+                  "});",
+                  "",
+                  "pm.test(\"populate() shows the pallette from the first collection\", () => {",
+                  "    const pallette = res.data.pallette;",
+                  "    pm.expect(pallette._id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "    pm.expect(pallette.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "    pm.expect(pallette.Description).to.eql(\"Warm sunset colors\");",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out of the color and its pallette\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "    pm.expect(res.data.pallette).to.not.have.property(\"__v\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE color by ID",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/colors/{{colorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors",
+                "{{colorId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Color deleted\");",
+                  "});",
+                  "",
+                  "pm.test(\"Output shows the ID\", () => {",
+                  "    pm.expect(res.id).to.eql(pm.collectionVariables.get(\"colorId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"Output is the color that was deleted\", () => {",
+                  "    pm.expect(res.data._id).to.eql(pm.collectionVariables.get(\"colorId\"));",
+                  "    pm.expect(res.data.hexcode).to.eql(\"#ff6347\");",
+                  "});",
+                  "",
+                  "pm.test(\"populate() shows the pallette from the first collection\", () => {",
+                  "    const pallette = res.data.pallette;",
+                  "    pm.expect(pallette._id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "    pm.expect(pallette.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "    pm.expect(pallette.Description).to.eql(\"Warm sunset colors\");",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out of the color and its pallette\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "    pm.expect(res.data.pallette).to.not.have.property(\"__v\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Not found",
+      "description": "Every :id function checks the database first and answers \"not found\" when the object is not there. The PUT requests send bad values to show the check comes before validation.",
+      "item": [
+        {
+          "name": "GET pallette - ID not found (404)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{missingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{missingId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"missingId\");",
+                  "",
+                  "pm.test(\"Status is 404\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Message says the Pallette was not found\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Pallette \" + id + \" not found\");",
+                  "});",
+                  "",
+                  "pm.test(\"No Pallette is returned\", () => {",
+                  "    pm.expect(res).to.not.have.property(\"data\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT pallette - ID not found, even with bad values (404)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"NumberofColors\": \"lots\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{missingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{missingId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"missingId\");",
+                  "",
+                  "pm.test(\"Status is 404\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Message says the Pallette was not found\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Pallette \" + id + \" not found\");",
+                  "});",
+                  "",
+                  "pm.test(\"No Pallette is returned\", () => {",
+                  "    pm.expect(res).to.not.have.property(\"data\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE pallette - ID not found (404)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{missingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{missingId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"missingId\");",
+                  "",
+                  "pm.test(\"Status is 404\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Message says the Pallette was not found\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Pallette \" + id + \" not found\");",
+                  "});",
+                  "",
+                  "pm.test(\"No Pallette is returned\", () => {",
+                  "    pm.expect(res).to.not.have.property(\"data\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET color - ID not found (404)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/colors/{{missingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors",
+                "{{missingId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"missingId\");",
+                  "",
+                  "pm.test(\"Status is 404\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Message says the color was not found\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Color \" + id + \" not found\");",
+                  "});",
+                  "",
+                  "pm.test(\"No color is returned\", () => {",
+                  "    pm.expect(res).to.not.have.property(\"data\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT color - ID not found, even with bad values (404)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hexcode\": \"nope\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors/{{missingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors",
+                "{{missingId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"missingId\");",
+                  "",
+                  "pm.test(\"Status is 404\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Message says the color was not found\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Color \" + id + \" not found\");",
+                  "});",
+                  "",
+                  "pm.test(\"No color is returned\", () => {",
+                  "    pm.expect(res).to.not.have.property(\"data\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE color - already deleted (404)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/colors/{{colorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors",
+                "{{colorId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"colorId\");",
+                  "",
+                  "pm.test(\"Status is 404\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Message says the color was not found\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Color \" + id + \" not found\");",
+                  "});",
+                  "",
+                  "pm.test(\"No color is returned\", () => {",
+                  "    pm.expect(res).to.not.have.property(\"data\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Error handling",
+      "description": "Other requests that should fail, and the error each one returns.",
+      "item": [
+        {
+          "name": "POST pallette - missing required fields (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"NumberofColors\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"name, Description, colorTypes and hexcodes are reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({",
+                  "        name: \"name is required\",",
+                  "        Description: \"Description is required\",",
+                  "        colorTypes: \"colorTypes is required\",",
+                  "        hexcodes: \"hexcodes is required\",",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pallette - NumberofColors and Description out of range (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ocean\",\n  \"Description\": \"A description that is far too long for the limit\",\n  \"colorTypes\": \"blue\",\n  \"hexcodes\": \"#0000ff\",\n  \"NumberofColors\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"NumberofColors and Description are reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({",
+                  "        NumberofColors: \"NumberofColors cannot be more than 999\",",
+                  "        Description: \"Description must be 40 characters or fewer\",",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pallette - name already taken (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{palletteName}}\",\n  \"Description\": \"Forest greens\",\n  \"colorTypes\": \"green\",\n  \"hexcodes\": \"#228b22\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 409\", () => {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "",
+                  "pm.test(\"Message says the name is taken\", () => {",
+                  "    pm.expect(res.message).to.eql('name \"' + pm.collectionVariables.get(\"palletteName\") + '\" is already taken');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pallette - body is not valid JSON (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"name\": \"Forest\", }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Request body is not valid JSON\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT pallette - NumberofColors is not a number (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"NumberofColors\": \"lots\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{palletteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{palletteId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"errors lists the value of the wrong type\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Validation failed\");",
+                  "    pm.expect(res.errors).to.eql({ NumberofColors: 'NumberofColors must be a valid number (got \"lots\")' });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PUT pallette - Description is null (400)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Description\": null\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{palletteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{palletteId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Description is reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({ Description: \"Description is required\" });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET pallette - invalid ID (400)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/not-an-id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "not-an-id"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"not-an-id is not a valid ID\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST color - pallette does not exist (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lost Blue\",\n  \"primaryColorType\": [\n    \"blue\"\n  ],\n  \"pallette\": \"{{missingId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"pallette is reported\", () => {",
+                  "    pm.expect(res.errors.pallette).to.eql(\"pallette \" + pm.collectionVariables.get(\"missingId\") + \" does not exist\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST color - bad type, hexcode and opacity (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cosmic Red\",\n  \"primaryColorType\": [\n    \"red\",\n    \"cosmic\"\n  ],\n  \"hexcode\": \"zzz\",\n  \"pallette\": \"{{palletteId}}\",\n  \"opacity\": 150\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"the bad type, hexcode and opacity are reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({",
+                  "        \"primaryColorType.1\": '\"cosmic\" is not a color type',",
+                  "        hexcode: \"hexcode must be 6 hex digits, like #ff0000\",",
+                  "        opacity: \"opacity cannot be more than 100\",",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST color - null type and opacity (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Null Green\",\n  \"primaryColorType\": [\n    \"green\",\n    null\n  ],\n  \"opacity\": null,\n  \"pallette\": \"{{palletteId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"primaryColorType and opacity are reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({",
+                  "        primaryColorType: \"primaryColorType must list 1 or 2 different types\",",
+                  "        opacity: \"opacity must be a number from 0 to 100\",",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pallette - colorTypes and hexcodes too short (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tiny\",\n  \"Description\": \"Too short\",\n  \"colorTypes\": \"x\",\n  \"hexcodes\": \"y\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"colorTypes and hexcodes are reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({\"colorTypes\":\"colorTypes must be at least 2 characters\",\"hexcodes\":\"hexcodes must be at least 2 characters\"});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST pallette - hexcodes are not hex codes (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Not Hex\",\n  \"Description\": \"Bad hexcodes\",\n  \"colorTypes\": \"red\",\n  \"hexcodes\": \"zz\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pallettes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"hexcodes is reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({\"hexcodes\":\"hexcodes must be 6-digit hex codes separated by commas, like #ff4500, #ffa500\"});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST color - no primary type (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"No Primary\",\n  \"pallette\": \"{{palletteId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"primaryColorType is reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({\"primaryColorType\":\"primaryColorType must list 1 or 2 different types\"});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST color - too many primary types (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Too Many\",\n  \"primaryColorType\": [\n    \"red\",\n    \"orange\",\n    \"yellow\"\n  ],\n  \"pallette\": \"{{palletteId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 400\", () => {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"primaryColorType is reported\", () => {",
+                  "    pm.expect(res.errors).to.eql({\"primaryColorType\":\"primaryColorType must list 1 or 2 different types\"});",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Delete pallette",
+      "description": "DELETE for /pallettes. Deleting a pallette also deletes the colors it has.",
+      "item": [
+        {
+          "name": "POST create a color for the pallette",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Deep Blue\",\n  \"primaryColorType\": [\n    \"blue\",\n    \"purple\"\n  ],\n  \"hexcode\": \"#00008b\",\n  \"pallette\": \"{{palletteId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/colors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 201\", () => {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"opacity defaults to 100 when it isn't sent\", () => {",
+                  "    pm.expect(res.data.opacity).to.eql(100);",
+                  "});",
+                  "",
+                  "pm.test(\"populate() shows the pallette from the first collection\", () => {",
+                  "    const pallette = res.data.pallette;",
+                  "    pm.expect(pallette._id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "    pm.expect(pallette.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "    pm.expect(pallette.Description).to.eql(\"Warm sunset colors\");",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out of the color and its pallette\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "    pm.expect(res.data.pallette).to.not.have.property(\"__v\");",
+                  "});",
+                  "",
+                  "if (res.data) {",
+                  "    pm.collectionVariables.set(\"secondColorId\", res.data._id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET pallette by ID (with its colors)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{palletteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{palletteId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Pallette lists its colors\", () => {",
+                  "    pm.expect(res.data.color.map((c) => c.name)).to.eql([\"Deep Blue\"]);",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out of the pallette and its colors\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "    pm.expect(res.data.color[0]).to.not.have.property(\"__v\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "DELETE pallette by ID",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/pallettes/{{palletteId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pallettes",
+                "{{palletteId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Status is 200\", () => {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Message is correct\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Pallette deleted along with 1 color\");",
+                  "});",
+                  "",
+                  "pm.test(\"Output shows the ID\", () => {",
+                  "    pm.expect(res.id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "});",
+                  "",
+                  "pm.test(\"Output is the pallette that was deleted\", () => {",
+                  "    pm.expect(res.data._id).to.eql(pm.collectionVariables.get(\"palletteId\"));",
+                  "    pm.expect(res.data.name).to.eql(pm.collectionVariables.get(\"palletteName\"));",
+                  "});",
+                  "",
+                  "pm.test(\"select() left __v out\", () => {",
+                  "    pm.expect(res.data).to.not.have.property(\"__v\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET the deleted pallette's color (404)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/colors/{{secondColorId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "colors",
+                "{{secondColorId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"secondColorId\");",
+                  "",
+                  "pm.test(\"Status is 404\", () => {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Message says the color was not found\", () => {",
+                  "    pm.expect(res.message).to.eql(\"Color \" + id + \" not found\");",
+                  "});",
+                  "",
+                  "pm.test(\"No color is returned\", () => {",
+                  "    pm.expect(res).to.not.have.property(\"data\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -22,7 +22,9 @@ const metadata = (req) => ({ hostname: req.hostname, method: req.method });
 
 // URL params are always strings ("4"), so convert to a number before
 // comparing with the numeric IDs in the array.
-const findBook = (bookId) => books.find((book) => book.bookId === Number(bookId));
+// Only whole numbers like "4" count, so "0x4" or "4.0" don't match book 4.
+const isBookId = (bookId) => /^\d+$/.test(bookId);
+const findBook = (bookId) => (isBookId(bookId) ? books.find((book) => book.bookId === Number(bookId)) : undefined);
 
 // 404 response for the by-ID routes when no book has that ID.
 const notFound = (req, res) => {
@@ -33,6 +35,9 @@ const notFound = (req, res) => {
         metadata: metadata(req),
     });
 };
+
+// A field counts as filled in when it's text with more than just spaces.
+const isFilled = (value) => typeof value === 'string' && value.trim() !== '';
 
 // 400 response for POST and PUT requests whose body is missing a field.
 const fieldsRequired = (req, res) => {
@@ -73,7 +78,7 @@ router.get("/:bookId", (req, res) => {
 router.post("/", (req, res) => {
     // req.body is undefined when no JSON body is sent, so fall back to {}.
     const { bookname, author } = req.body ?? {};
-    if (!bookname || !author) return fieldsRequired(req, res);
+    if (!isFilled(bookname) || !isFilled(author)) return fieldsRequired(req, res);
 
     const book = { bookId: nextId++, bookname, author };
     books.push(book);
@@ -95,7 +100,7 @@ router.put("/:bookId", (req, res) => {
     if (!book) return notFound(req, res);
 
     const { bookname, author } = req.body ?? {};
-    if (!bookname || !author) return fieldsRequired(req, res);
+    if (!isFilled(bookname) || !isFilled(author)) return fieldsRequired(req, res);
 
     // findBook returns the object stored in the array, so changing it here
     // updates the data store directly.
@@ -115,7 +120,7 @@ router.put("/:bookId", (req, res) => {
 router.delete("/:bookId", (req, res) => {
     const { bookId } = req.params;
     // findIndex returns -1 when no book has that ID.
-    const index = books.findIndex((book) => book.bookId === Number(bookId));
+    const index = isBookId(bookId) ? books.findIndex((book) => book.bookId === Number(bookId)) : -1;
     if (index === -1) return notFound(req, res);
 
     // splice removes the book from the array and returns it in a new array.
