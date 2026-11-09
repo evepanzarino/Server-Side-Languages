@@ -1,0 +1,3 @@
+$kind: collection
+description: Other requests that should fail, and the error each one returns.
+order: 4000

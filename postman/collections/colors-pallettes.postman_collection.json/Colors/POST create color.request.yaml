@@ -1,0 +1,57 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Sunset Red",
+      "colorType": [
+        "Red",
+        "orange"
+      ],
+      "hexcode": "#ff4500",
+      "opacity": 80,
+      "pallette": "{{palletteId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("Message is correct", () => {
+          pm.expect(res.message).to.eql("Color created");
+      });
+
+      pm.test("Color has the posted fields", () => {
+          pm.expect(res.data.name).to.eql("Sunset Red");
+          // The body sends "Red", and the schema saves it in lowercase.
+          pm.expect(res.data.colorType).to.eql(["red", "orange"]);
+          pm.expect(res.data.hexcode).to.eql("#ff4500");
+          pm.expect(res.data.opacity).to.eql(80);
+      });
+
+      pm.test("populate() shows the pallette from the first collection", () => {
+          const pallette = res.data.pallette;
+          pm.expect(pallette._id).to.eql(pm.collectionVariables.get("palletteId"));
+          pm.expect(pallette.name).to.eql(pm.collectionVariables.get("palletteName"));
+          pm.expect(pallette.Description).to.eql("Warm sunset colors");
+      });
+
+      pm.test("select() left __v out of the color and its pallette", () => {
+          pm.expect(res.data).to.not.have.property("__v");
+          pm.expect(res.data.pallette).to.not.have.property("__v");
+      });
+
+      // Save the new color's _id so the requests below use it.
+      if (res.data) {
+          pm.collectionVariables.set("colorId", res.data._id);
+      }
+    language: text/javascript
+order: 1000

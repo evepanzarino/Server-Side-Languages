@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "No Primary",
+      "pallette": "{{palletteId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("colorType is reported", () => {
+          pm.expect(res.errors).to.eql({"colorType":"colorType must list 1 or 2 different types"});
+      });
+    language: text/javascript
+order: 13000

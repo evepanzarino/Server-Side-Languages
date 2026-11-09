@@ -5,8 +5,22 @@ const Color = require('../models/Colors');
 const messages = require('../messages/messages');
 const { metadata, notFound, handleError } = require('./responses');
 
+// NumberofColors counts the hexcodes. One hex code sent as a string counts as 1.
+// No hexcodes sent means no count, so a PUT without hexcodes keeps the old number.
+const countHexcodes = (hexcodes) => {
+    if (hexcodes === undefined) return undefined;
+    return Array.isArray(hexcodes) ? hexcodes.length : 1;
+};
+
 // Only these fields are read from a request body, so a client can't set _id or __v.
-const palletteFields = ({ name, Description, colorTypes, hexcodes, NumberofColors } = {}) => ({ name, Description, colorTypes, hexcodes, NumberofColors });
+// NumberofColors isn't read from the body. It's counted from hexcodes.
+const palletteFields = ({ name, Description, colorTypes, hexcodes } = {}) => ({
+    name,
+    Description,
+    colorTypes,
+    hexcodes,
+    NumberofColors: countHexcodes(hexcodes),
+});
 
 // 1. GET all: every pallette, sorted by name.
 // GET localhost:3000/pallettes
@@ -46,7 +60,8 @@ const getPalletteById = async (req, res) => {
 
 // 3. POST: create a pallette.
 // POST localhost:3000/pallettes
-// Body (raw JSON): { "name": "Sunset", "Description": "Warm sunset colors", "colorTypes": "red, orange", "hexcodes": "#ff4500, #ffa500", "NumberofColors": 2 }
+// Body (raw JSON): { "name": "Sunset", "Description": "Warm sunset colors", "colorTypes": "red, orange", "hexcodes": ["#ff4500", "#ffa500"] }
+// NumberofColors is saved as 2, one for each hex code.
 const createPallette = async (req, res) => {
     try {
         // create() runs the schema validators before saving.
@@ -67,7 +82,8 @@ const createPallette = async (req, res) => {
 
 // 4. PUT by ID: update a pallette. Only the fields sent in the body change.
 // PUT localhost:3000/pallettes/:id
-// Body (raw JSON): { "NumberofColors": 3 }
+// Body (raw JSON): { "hexcodes": ["#00ffff", "#008080", "#000080"] }
+// Sending new hexcodes changes NumberofColors to match, here 3.
 const updatePallette = async (req, res) => {
     const { id } = req.params;
     try {

@@ -4,6 +4,13 @@
 const mongoose = require('mongoose');
 const messages = require('../messages/messages');
 
+// One hex code in the hexcodes list: 6 digits, with or without the #.
+const hexcode = {
+    type: String,
+    trim: true,
+    match: [/^#?[0-9a-fA-F]{6}$/, messages.HEXCODE_IN_LIST_INVALID],
+};
+
 const palletteSchema = new mongoose.Schema(
     {
         //String: pallette's name.
@@ -20,7 +27,7 @@ const palletteSchema = new mongoose.Schema(
             type: String,
             required: [true, messages.DESCRIPTION_REQUIRED],
             trim: true,
-            maxlength: [40, messages.DESCRIPTION_TOO_LONG],
+            maxlength: [255, messages.DESCRIPTION_TOO_LONG],
         },
         //String: color types present in the pallette, ex: "red, orange,black,white".
         colorTypes: {
@@ -30,26 +37,22 @@ const palletteSchema = new mongoose.Schema(
             minlength: [2, messages.COLOR_TYPES_TOO_SHORT],
             maxlength: [999, messages.COLOR_TYPES_TOO_LONG],
         },
-        //String: hexcodes present in the pallette, e.g. "#ff4500, #ffa500".
+        //Array: hexcodes present in the pallette, ex: ["#ff4500", "#ffa500"].
         hexcodes: {
-            type: String,
-            required: [true, messages.HEXCODES_REQUIRED],
-            trim: true,
-            minlength: [2, messages.HEXCODES_TOO_SHORT],
-            maxlength: [999, messages.HEXCODES_TOO_LONG],
-            // One or more 6-digit hex codes separated by commas, each with or without the #.
-            match: [/^#?[0-9a-fA-F]{6}(\s*,\s*#?[0-9a-fA-F]{6})*$/, messages.HEXCODES_INVALID],
+            type: [hexcode],
+            validate: {
+                // At least one hex code, with no blanks or nulls in the list.
+                validator: (codes) => Array.isArray(codes)
+                    && codes.length >= 1
+                    && codes.every((code) => code != null && code !== ''),
+                message: messages.HEXCODES_REQUIRED,
+            },
         },
-        // Number: how many colors the pallette has, a whole number from 0 to 999.
+        // Number: how many hexcodes the pallette has, up to 999.
+        // The controller counts it from hexcodes, so it isn't sent in the body.
         NumberofColors: {
             type: Number,
-            default: 0,
-            min: [0, messages.NUMBER_OF_COLORS_TOO_LOW],
             max: [999, messages.NUMBER_OF_COLORS_TOO_HIGH],
-            validate: {
-                validator: Number.isInteger,
-                message: messages.NUMBER_OF_COLORS_NOT_WHOLE,
-            },
         },
     },
     {

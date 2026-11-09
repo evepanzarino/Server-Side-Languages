@@ -1,0 +1,38 @@
+$kind: http-request
+url: "{{baseUrl}}/colors/{{colorId}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Message is correct", () => {
+          pm.expect(res.message).to.eql("Color deleted");
+      });
+
+      pm.test("Output shows the ID", () => {
+          pm.expect(res.id).to.eql(pm.collectionVariables.get("colorId"));
+      });
+
+      pm.test("Output is the color that was deleted", () => {
+          pm.expect(res.data._id).to.eql(pm.collectionVariables.get("colorId"));
+          pm.expect(res.data.hexcode).to.eql("#ff6347");
+      });
+
+      pm.test("populate() shows the pallette from the first collection", () => {
+          const pallette = res.data.pallette;
+          pm.expect(pallette._id).to.eql(pm.collectionVariables.get("palletteId"));
+          pm.expect(pallette.name).to.eql(pm.collectionVariables.get("palletteName"));
+          pm.expect(pallette.Description).to.eql("Warm sunset colors");
+      });
+
+      pm.test("select() left __v out of the color and its pallette", () => {
+          pm.expect(res.data).to.not.have.property("__v");
+          pm.expect(res.data.pallette).to.not.have.property("__v");
+      });
+    language: text/javascript
+order: 5000

@@ -1,0 +1,35 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes/{{palletteId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const palletteId = pm.collectionVariables.get("palletteId");
+
+      pm.test("Status is 200 OK", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Message says the pallette was found by ID", () => {
+          pm.expect(res.message).to.eql("Get pallette by ID");
+      });
+
+      pm.test("Output is the pallette with the requested ID", () => {
+          pm.expect(res.id).to.eql(palletteId);
+          pm.expect(res.data._id).to.eql(palletteId);
+      });
+
+      pm.test("Pallette has the details that were saved", () => {
+          pm.expect(res.data.name).to.eql(pm.collectionVariables.get("palletteName"));
+          pm.expect(res.data.Description).to.eql("Warm sunset colors");
+          pm.expect(res.data.colorTypes).to.eql("red, orange");
+          pm.expect(res.data.hexcodes).to.eql(["#ff4500", "#ffa500"]);
+          pm.expect(res.data.NumberofColors).to.eql(2);
+      });
+
+      pm.test("A new pallette has an empty color list", () => {
+          pm.expect(res.data.color).to.eql([]);
+      });
+    language: text/javascript
+order: 1000

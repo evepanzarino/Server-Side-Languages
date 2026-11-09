@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes/{{palletteId}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const palletteId = pm.collectionVariables.get("palletteId");
+
+      pm.test("Status is 404 Not Found", () => {
+          pm.response.to.have.status(404);
+      });
+
+      pm.test("Message says the pallette wasn't found", () => {
+          pm.expect(res.message).to.eql("Pallette " + palletteId + " not found");
+      });
+
+      pm.test("No pallette is returned", () => {
+          pm.expect(res).to.not.have.property("data");
+      });
+    language: text/javascript
+order: 3000

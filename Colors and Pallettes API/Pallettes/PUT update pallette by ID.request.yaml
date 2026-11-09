@@ -1,0 +1,40 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes/{{palletteId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "hexcodes": "#00ffff",
+      "NumberofColors": 99
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Message is correct", () => {
+          pm.expect(res.message).to.eql("Pallette updated");
+      });
+
+      pm.test("Output shows the ID", () => {
+          pm.expect(res.id).to.eql(pm.collectionVariables.get("palletteId"));
+      });
+
+      pm.test("One hexcode string is saved as a list and counted as 1, not the 99 sent", () => {
+          pm.expect(res.data.hexcodes).to.eql(["#00ffff"]);
+          pm.expect(res.data.NumberofColors).to.eql(1);
+          pm.expect(res.data.name).to.eql(pm.collectionVariables.get("palletteName"));
+      });
+
+      pm.test("select() left __v out", () => {
+          pm.expect(res.data).to.not.have.property("__v");
+      });
+    language: text/javascript
+order: 4000

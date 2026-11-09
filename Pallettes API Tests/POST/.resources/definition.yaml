@@ -1,0 +1,3 @@
+$kind: collection
+description: POST /pallettes creates a pallette.
+order: 1000

@@ -1,0 +1,30 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "{{palletteName}}",
+      "Description": "Forest greens",
+      "colorTypes": "green",
+      "hexcodes": [
+        "#228b22"
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 409", () => {
+          pm.response.to.have.status(409);
+      });
+
+      pm.test("Message says the name is taken", () => {
+          pm.expect(res.message).to.eql('name "' + pm.collectionVariables.get("palletteName") + '" is already taken');
+      });
+    language: text/javascript
+order: 3000

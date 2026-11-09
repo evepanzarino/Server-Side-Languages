@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/users/{{userId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Ada King",
+      "email": "ada@example.com"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Output shows the ID", () => pm.expect(pm.response.json().id).to.eql(String(pm.collectionVariables.get("userId"))));
+    language: text/javascript
+order: 5000

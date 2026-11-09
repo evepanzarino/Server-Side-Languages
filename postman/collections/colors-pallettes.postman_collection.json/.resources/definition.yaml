@@ -1,0 +1,15 @@
+$kind: collection
+name: Colors and Pallettes API
+description: |-
+  CRUD requests for the pallettes and colors MongoDB collections. A color has a pallette: POST create color sends the _id of a pallette in the first collection, and every color payload shows that pallette with populate().
+
+  Start the server with `npm run dev`, then run the collection from top to bottom (or use the Collection Runner). POST create pallette saves the new _id in {{palletteId}} and POST create color saves {{colorId}}, so the requests after them use those IDs. Every run uses a new pallette name and the last folder deletes that pallette, so the collection can be run again.
+variables:
+  baseUrl: http://localhost:3000
+  missingId: "000000000000000000000000"
+  palletteName: ""
+  palletteId: ""
+  colorId: ""
+  secondColorId: ""
+  longDescription: ""
+  thousandHexcodes: ""

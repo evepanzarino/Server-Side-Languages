@@ -1,0 +1,36 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {}
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400 Bad Request", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("Message says validation failed", () => {
+          pm.expect(res.message).to.eql("Validation failed");
+      });
+
+      pm.test("errors lists the message for each missing field", () => {
+          pm.expect(res.errors).to.eql({
+              name: "name is required",
+              Description: "Description is required",
+              colorTypes: "colorTypes is required",
+              hexcodes: 'hexcodes must list at least one hex code, like ["#ff4500"]',
+          });
+      });
+
+      pm.test("No pallette is returned", () => {
+          pm.expect(res).to.not.have.property("data");
+      });
+    language: text/javascript
+order: 2000

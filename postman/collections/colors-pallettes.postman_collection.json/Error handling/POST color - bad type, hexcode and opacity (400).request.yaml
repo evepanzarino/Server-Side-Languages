@@ -1,0 +1,36 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Cosmic Red",
+      "colorType": [
+        "red",
+        "cosmic"
+      ],
+      "hexcode": "zzz",
+      "pallette": "{{palletteId}}",
+      "opacity": 150
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("the bad type, hexcode and opacity are reported", () => {
+          pm.expect(res.errors).to.eql({
+              "colorType.1": '"cosmic" is not a color type',
+              hexcode: "hexcode must be 6 hex digits, like #ff0000",
+              opacity: "opacity cannot be more than 100",
+          });
+      });
+    language: text/javascript
+order: 9000

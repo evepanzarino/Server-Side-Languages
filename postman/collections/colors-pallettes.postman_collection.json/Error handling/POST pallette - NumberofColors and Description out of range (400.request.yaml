@@ -1,0 +1,39 @@
+$kind: http-request
+name: POST pallette - NumberofColors and Description out of range (400)
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Ocean",
+      "Description": "{{longDescription}}",
+      "colorTypes": "blue",
+      "hexcodes": {{thousandHexcodes}}
+    }
+scripts:
+  - type: beforeRequest
+    code: |-
+      // A description one character over the 255 limit.
+      pm.collectionVariables.set("longDescription", "x".repeat(256));
+      // 1000 hexcodes, one over the 999 limit for NumberofColors.
+      pm.collectionVariables.set("thousandHexcodes", JSON.stringify(Array(1000).fill("#0000ff")));
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("NumberofColors and Description are reported", () => {
+          pm.expect(res.errors).to.eql({
+              NumberofColors: "A pallette can have 999 hexcodes at most",
+              Description: "Description must be 255 characters or fewer",
+          });
+      });
+    language: text/javascript
+order: 2000

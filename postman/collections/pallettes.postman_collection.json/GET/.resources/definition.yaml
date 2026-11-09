@@ -1,0 +1,3 @@
+$kind: collection
+description: GET /pallettes lists every pallette.
+order: 2000

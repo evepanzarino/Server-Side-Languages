@@ -1,0 +1,46 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes/{{palletteId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "Description": "Cool ocean colors",
+      "hexcodes": [
+        "#00ffff",
+        "#008080",
+        "#000080"
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200 OK", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Message says the pallette was updated", () => {
+          pm.expect(res.message).to.eql("Pallette updated");
+      });
+
+      pm.test("Description and hexcodes have the new values, and NumberofColors counts the 3 hexcodes", () => {
+          pm.expect(res.data.Description).to.eql("Cool ocean colors");
+          pm.expect(res.data.hexcodes).to.eql(["#00ffff", "#008080", "#000080"]);
+          pm.expect(res.data.NumberofColors).to.eql(3);
+      });
+
+      pm.test("Fields that weren't sent stayed the same", () => {
+          pm.expect(res.data.name).to.eql(pm.collectionVariables.get("palletteName"));
+          pm.expect(res.data.colorTypes).to.eql("red, orange");
+      });
+
+      pm.test("It is still the same pallette", () => {
+          pm.expect(res.id).to.eql(pm.collectionVariables.get("palletteId"));
+          pm.expect(res.data._id).to.eql(pm.collectionVariables.get("palletteId"));
+      });
+    language: text/javascript
+order: 1000

@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: '{ "name": "Forest", }'
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("Message is correct", () => {
+          pm.expect(res.message).to.eql("Request body is not valid JSON");
+      });
+    language: text/javascript
+order: 4000

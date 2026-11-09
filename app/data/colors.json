@@ -1,0 +1,105 @@
+{
+    "name": "Red",
+    "colorType": "red",
+    "hexcode": "#FF0000",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+} 
+{
+    "name": "Black",
+    "colorType": "Black",
+    "hexcode": "#000000",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "White",
+    "colorType": "White",
+    "hexcode": "#FFFFFF",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Bright Red",
+    "colorType": ["red", "white"],
+    "hexcode": "#FF3333",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Light Red",
+    "colorType": ["red", "white"],
+    "hexcode": "#FF6666",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Pastel Red",
+    "colorType": ["red", "white"],
+    "hexcode": "#FF9999",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Pale Pink",
+    "colorType": ["red", "white"],
+    "hexcode": "#FFCCCC",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Dark Red",
+    "colorType": ["red", "black"],
+    "hexcode": "#CC0000",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Deep Red",
+    "colorType": ["red", "black"],
+    "hexcode": "#990000",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Blood Red",
+    "colorType": ["red", "black"],
+    "hexcode": "#660000",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Darkest Red",
+    "colorType": ["red", "black"],
+    "hexcode": "#330000",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Brick Red",
+    "colorType": ["red", "black"],
+    "hexcode": "#993333",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Dusty Red",
+    "colorType": ["red", "black"],
+    "hexcode": "#A66666",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Dark Brick Red",
+    "colorType": ["red", "black"],
+    "hexcode": "#661A1A",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}
+{
+    "name": "Grayish Red",
+    "colorType": ["red", "black"],
+    "hexcode": "#4D3333",
+    "opacity": 100,
+    "pallette": "Shades of Red"
+}

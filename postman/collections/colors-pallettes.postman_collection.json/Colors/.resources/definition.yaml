@@ -1,0 +1,3 @@
+$kind: collection
+description: The 5 CRUD requests for /colors, the second collection. POST sends the _id of the pallette saved in {{palletteId}}, and every payload shows that pallette with populate() and leaves out __v with select().
+order: 2000

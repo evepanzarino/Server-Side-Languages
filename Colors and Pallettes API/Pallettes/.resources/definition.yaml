@@ -1,0 +1,3 @@
+$kind: collection
+description: GET, GET by ID, POST and PUT for /pallettes, the first collection. DELETE is in the last folder, after the color requests have used this pallette.
+order: 1000

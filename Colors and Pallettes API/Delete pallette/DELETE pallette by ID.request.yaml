@@ -1,0 +1,30 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes/{{palletteId}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Message is correct", () => {
+          pm.expect(res.message).to.eql("Pallette deleted along with 1 color");
+      });
+
+      pm.test("Output shows the ID", () => {
+          pm.expect(res.id).to.eql(pm.collectionVariables.get("palletteId"));
+      });
+
+      pm.test("Output is the pallette that was deleted", () => {
+          pm.expect(res.data._id).to.eql(pm.collectionVariables.get("palletteId"));
+          pm.expect(res.data.name).to.eql(pm.collectionVariables.get("palletteName"));
+      });
+
+      pm.test("select() left __v out", () => {
+          pm.expect(res.data).to.not.have.property("__v");
+      });
+    language: text/javascript
+order: 3000

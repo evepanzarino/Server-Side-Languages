@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes/{{palletteId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": {
+        "first": "Ocean"
+      }
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("errors lists the value of the wrong type", () => {
+          pm.expect(res.message).to.eql("Validation failed");
+          pm.expect(res.errors).to.eql({ name: 'name must be a valid string (got {"first":"Ocean"})' });
+      });
+    language: text/javascript
+order: 5000

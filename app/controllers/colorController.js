@@ -10,7 +10,7 @@ const messages = require('../messages/messages');
 const { metadata, notFound, handleError } = require('./responses');
 
 // Only these fields are read from a request body, so a client can't set _id or __v.
-const colorFields = ({ name, primaryColorType, hexcode, opacity, pallette } = {}) => ({ name, primaryColorType, hexcode, opacity, pallette });
+const colorFields = ({ name, colorType, hexcode, opacity, pallette } = {}) => ({ name, colorType, hexcode, opacity, pallette });
 
 // 1. GET all: every color, with its pallette.
 // GET localhost:3000/colors
@@ -49,7 +49,7 @@ const getColorById = async (req, res) => {
 // 3. POST: create a color for an existing pallette. "pallette" is the _id of a
 // document in the pallettes collection (found in MongoDB).
 // POST localhost:3000/colors
-// Body (raw JSON): { "name": "Sunset Red", "primaryColorType": ["red", "orange"], "hexcode": "#ff4500", "opacity": 80, "pallette": "<pallette _id>" }
+// Body (raw JSON): { "name": "Sunset Red", "colorType": ["red", "orange"], "hexcode": "#ff4500", "opacity": 80, "pallette": "<pallette _id>" }
 const createColor = async (req, res) => {
     try {
         // create() runs the schema validators before saving, including the

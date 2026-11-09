@@ -1,0 +1,47 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Deep Blue",
+      "colorType": [
+        "blue",
+        "purple"
+      ],
+      "hexcode": "#00008b",
+      "pallette": "{{palletteId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("opacity defaults to 100 when it isn't sent", () => {
+          pm.expect(res.data.opacity).to.eql(100);
+      });
+
+      pm.test("populate() shows the pallette from the first collection", () => {
+          const pallette = res.data.pallette;
+          pm.expect(pallette._id).to.eql(pm.collectionVariables.get("palletteId"));
+          pm.expect(pallette.name).to.eql(pm.collectionVariables.get("palletteName"));
+          pm.expect(pallette.Description).to.eql("Warm sunset colors");
+      });
+
+      pm.test("select() left __v out of the color and its pallette", () => {
+          pm.expect(res.data).to.not.have.property("__v");
+          pm.expect(res.data.pallette).to.not.have.property("__v");
+      });
+
+      if (res.data) {
+          pm.collectionVariables.set("secondColorId", res.data._id);
+      }
+    language: text/javascript
+order: 1000

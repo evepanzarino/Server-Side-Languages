@@ -1,0 +1,3 @@
+$kind: collection
+description: DELETE /pallettes/:id removes a pallette and the colors it has.
+order: 5000

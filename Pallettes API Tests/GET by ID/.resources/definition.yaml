@@ -1,0 +1,3 @@
+$kind: collection
+description: GET /pallettes/:id returns one pallette and the colors it has.
+order: 3000

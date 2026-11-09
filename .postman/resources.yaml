@@ -1,0 +1,18 @@
+workspace:
+  id: 9b12b0c8-aa9a-4538-855b-18e37050ef03
+
+localResources:
+  collections:
+    - ../Colors and Pallettes API
+    - ../Pallettes API Tests
+    - ../Users API
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/colors-pallettes.postman_collection.json: 60050510-52ed0a4f-4cda-439d-a4b2-4330109d3c08
+    ../postman/collections/pallettes.postman_collection.json: 60050510-34627513-2c9d-4a18-957d-7769227b355a
+    ../postman/collections/users.postman_collection.json: 60050510-e0c2b026-bdfa-4d38-a848-338edd41a257
+  globals:
+    ../postman/globals/workspace.globals.yaml: ae65b798-56b5-4edc-8a16-6c59f8fb5b5e

@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Message is correct", () => {
+          pm.expect(res.message).to.eql("Get all colors");
+      });
+
+      pm.test("List includes the new color with its pallette", () => {
+          const sunsetRed = res.data.find((c) => c._id === pm.collectionVariables.get("colorId"));
+          pm.expect(sunsetRed.name).to.eql("Sunset Red");
+          pm.expect(sunsetRed.pallette.name).to.eql(pm.collectionVariables.get("palletteName"));
+      });
+
+      pm.test("populate() and select() were used on every item", () => {
+          res.data.forEach((color) => {
+              pm.expect(color).to.not.have.property("__v");
+              pm.expect(color.pallette).to.be.an("object");
+              pm.expect(color.pallette).to.not.have.property("__v");
+          });
+      });
+    language: text/javascript
+order: 2000

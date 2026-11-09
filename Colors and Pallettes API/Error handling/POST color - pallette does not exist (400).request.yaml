@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Lost Blue",
+      "colorType": [
+        "blue"
+      ],
+      "pallette": "{{missingId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("pallette is reported", () => {
+          pm.expect(res.errors.pallette).to.eql("pallette " + pm.collectionVariables.get("missingId") + " does not exist");
+      });
+    language: text/javascript
+order: 8000

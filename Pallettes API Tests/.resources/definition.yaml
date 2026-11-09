@@ -1,0 +1,10 @@
+$kind: collection
+description: |-
+  Integration tests for the pallettes MongoDB collection: GET, GET by ID, POST, PUT by ID and DELETE by ID. Each request tests the status code and the returned payload.
+
+  Start the server with `npm run dev`, then run the whole collection from top to bottom with the Collection Runner. POST create pallette saves the new pallette in collection variables, so the requests after it depend on it. Every run uses a new pallette name and deletes that pallette at the end, so the collection can be run again and again.
+variables:
+  baseUrl: http://localhost:3000
+  missingId: "000000000000000000000000"
+  palletteName: ""
+  palletteId: ""

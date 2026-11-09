@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {}
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("name, Description, colorTypes and hexcodes are reported", () => {
+          pm.expect(res.errors).to.eql({
+              name: "name is required",
+              Description: "Description is required",
+              colorTypes: "colorTypes is required",
+              hexcodes: 'hexcodes must list at least one hex code, like ["#ff4500"]',
+          });
+      });
+    language: text/javascript
+order: 1000

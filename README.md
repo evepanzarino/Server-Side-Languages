@@ -42,8 +42,8 @@ the 5 CRUD methods for /app/models/users.js, which saves the users to /app/data/
 the 5 CRUD methods for the pallettes collection
 1. Get: GET localhost:3000/pallettes - gets all pallettes
 2. Get by ID: GET localhost:3000/pallettes/{palletteId} - gets a pallette and the colors it has
-3. Post: POST localhost:3000/pallettes - Body raw JSON { "name": "Sunset", "Description": "Warm sunset colors", "colorTypes": "red, orange", "hexcodes": "#ff4500, #ffa500", "NumberofColors": 2 } - Post new pallette
-4. Put by ID: PUT localhost:3000/pallettes/{palletteId} - Body raw JSON with the fields to change, e.g. { "NumberofColors": 3 }
+3. Post: POST localhost:3000/pallettes - Body raw JSON { "name": "Sunset", "Description": "Warm sunset colors", "colorTypes": "red, orange", "hexcodes": ["#ff4500", "#ffa500"] } - Post new pallette. NumberofColors is counted from hexcodes, so this one gets 2.
+4. Put by ID: PUT localhost:3000/pallettes/{palletteId} - Body raw JSON with the fields to change, e.g. { "hexcodes": ["#00ffff", "#008080", "#000080"] } changes NumberofColors to 3
 5. Delete by ID: DELETE localhost:3000/pallettes/{palletteId} - deletes the pallette and its colors
 
 ### **Colors Router (MongoDB)**
@@ -51,7 +51,7 @@ the 5 CRUD methods for the pallettes collection
 the 5 CRUD methods for colors, which MongoDB stores in the "color" collection
 1. Get: GET localhost:3000/colors - gets all colors with their pallette
 2. Get by ID: GET localhost:3000/colors/{colorId} - gets a color and its pallette
-3. Post: POST localhost:3000/colors - Body raw JSON { "name": "Sunset Red", "primaryColorType": ["red", "orange"], "hexcode": "#ff4500", "opacity": 80, "pallette": "{palletteId}" } - Post new color. "pallette" is the _id of a pallette in the first collection (found in MongoDB)
+3. Post: POST localhost:3000/colors - Body raw JSON { "name": "Sunset Red", "colorType": ["red", "orange"], "hexcode": "#ff4500", "opacity": 80, "pallette": "{palletteId}" } - Post new color. "pallette" is the _id of a pallette in the first collection (found in MongoDB)
 4. Put by ID: PUT localhost:3000/colors/{colorId} - Body raw JSON with the fields to change, e.g. { "hexcode": "#ff6347", "opacity": 50 }
 5. Delete by ID: DELETE localhost:3000/colors/{colorId} - deletes color by id
 
@@ -72,15 +72,15 @@ Each color stores its pallette's `_id` in `pallette` (`ref: 'Pallette'`). `.popu
 | Pallette | Type | Validation |
 |---|---|---|
 | name | String | required, 2-30 characters, unique |
-| Description | String | required, up to 40 characters |
+| Description | String | required, up to 255 characters |
 | colorTypes | String | required, 2-999 characters |
-| hexcodes | String | required, 6-digit hex codes separated by commas |
-| NumberofColors | Number | whole number 0-999, default 0 |
+| hexcodes | Array of Strings | at least one 6-digit hex code, each with or without the # |
+| NumberofColors | Number | counted from hexcodes (one hex code sent as a string counts as 1), up to 999; not read from the body |
 
 | Color | Type | Validation |
 |---|---|---|
 | name | String | required, up to 20 characters |
-| primaryColorType | Array of Strings | 1 or 2 different color types |
+| colorType | Array of Strings | 1 or 2 different color types |
 | hexcode | String | 6 hex digits with or without the #, default #000000 |
 | opacity | Number | 0-100, where 0 is fully transparent and 100 is fully opaque, default 100 |
 | pallette | ObjectId (ref Pallette) | required, the pallette must exist |

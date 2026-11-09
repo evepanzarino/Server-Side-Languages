@@ -1,0 +1,57 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "{{palletteName}}",
+      "Description": "Warm sunset colors",
+      "colorTypes": "red, orange",
+      "hexcodes": [
+        "#ff4500",
+        "#ffa500"
+      ]
+    }
+scripts:
+  - type: beforeRequest
+    code: |-
+      // Pallette names are unique, so each run needs a new name.
+      pm.collectionVariables.set("palletteName", "Sunset " + Date.now());
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201 Created", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("Message says the pallette was created", () => {
+          pm.expect(res.message).to.eql("Pallette created");
+      });
+
+      pm.test("Response has the fields that were sent, and NumberofColors counts the 2 hexcodes", () => {
+          pm.expect(res.data.name).to.eql(pm.collectionVariables.get("palletteName"));
+          pm.expect(res.data.Description).to.eql("Warm sunset colors");
+          pm.expect(res.data.colorTypes).to.eql("red, orange");
+          pm.expect(res.data.hexcodes).to.eql(["#ff4500", "#ffa500"]);
+          pm.expect(res.data.NumberofColors).to.eql(2);
+      });
+
+      pm.test("MongoDB gave the pallette a 24-character _id", () => {
+          pm.expect(res.data._id).to.match(/^[a-f0-9]{24}$/);
+      });
+
+      pm.test("select() left __v out of the new pallette", () => {
+          pm.expect(res.data).to.not.have.property("__v");
+      });
+
+      // Save the new pallette's details for the requests below.
+      if (res.data) {
+          pm.collectionVariables.set("palletteId", res.data._id);
+      }
+    language: text/javascript
+order: 1000

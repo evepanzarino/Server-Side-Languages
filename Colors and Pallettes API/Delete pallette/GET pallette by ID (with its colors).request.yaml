@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes/{{palletteId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Pallette lists its colors", () => {
+          pm.expect(res.data.color.map((c) => c.name)).to.eql(["Deep Blue"]);
+      });
+
+      pm.test("select() left __v out of the pallette and its colors", () => {
+          pm.expect(res.data).to.not.have.property("__v");
+          pm.expect(res.data.color[0]).to.not.have.property("__v");
+      });
+    language: text/javascript
+order: 2000

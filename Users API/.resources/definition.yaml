@@ -1,0 +1,5 @@
+$kind: collection
+description: "The 5 methods for the users context, plus the actuator at localhost:3000. Run POST before the by-ID requests: it saves the new user's ID in the userId variable."
+variables:
+  baseUrl: http://localhost:3000
+  userId: "1"

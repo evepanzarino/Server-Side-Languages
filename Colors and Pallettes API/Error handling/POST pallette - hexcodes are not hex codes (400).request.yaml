@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Not Hex",
+      "Description": "Bad hexcodes",
+      "colorTypes": "red",
+      "hexcodes": [
+        "#ff4500",
+        "zz"
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("hexcodes is reported", () => {
+          pm.expect(res.errors).to.eql({ "hexcodes.1": '"zz" is not a 6-digit hex code' });
+      });
+    language: text/javascript
+order: 12000

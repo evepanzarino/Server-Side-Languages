@@ -9,7 +9,7 @@ const COLOR_TYPES = [
     'black', 'white', 'brown', 'beige',
 ];
 
-// primaryColorType list.
+// One entry in the colorType list.
 const colorType = {
     type: String,
     lowercase: true,
@@ -34,13 +34,13 @@ const COLORSchema = new mongoose.Schema({
         maxlength: [20, messages.COLOR_NAME_TOO_LONG],
     },
     // Array of Strings: one or two types from COLOR_TYPES, e.g. ["red", "orange"].
-    primaryColorType: {
+    colorType: {
         type: [colorType],
         validate: {
             validator: (types) => hasNoNullsOrRepeats(types)
                 && types.length >= 1
                 && types.length <= 2,
-            message: messages.PRIMARY_TYPES_INVALID_COUNT,
+            message: messages.COLOR_TYPE_INVALID_COUNT,
         },
     },
     // String: the color's 6-digit hex code, with or without the #, e.g. "#ff4500".

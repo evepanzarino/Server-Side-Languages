@@ -1,0 +1,3 @@
+$kind: collection
+description: PUT /pallettes/:id changes only the fields sent in the body.
+order: 4000
