@@ -57,7 +57,7 @@ const readLocation = (req) => {
     return { latitude, longitude, name };
 };
 
-// a. GET with lat and lon: the weather at that location right now from the Open-Meteo API. 
+// 1. GET with lat and lon: the weather at that location right now from the Open-Meteo API. 
 // GET localhost:3000/api/geo-data?lat=28.5383&lon=-81.3792&name=Orlando  (name is optional)
 // "data" is ready to send to POST /api/geo-data.
 const getLiveGeoData = async (req, res) => {
@@ -84,7 +84,7 @@ const getLiveGeoData = async (req, res) => {
     }
 };
 
-// c. GET without lat and lon: the geo data saved in MongoDB, newest first, 10 at a time.
+// 2. GET without lat and lon: the geo data saved in MongoDB, newest first, 10 at a time.
 // GET localhost:3000/api/geo-data
 // The query string can filter, sort, skip, limit, page and select in any order,
 // like the other getAll routes:
@@ -111,7 +111,7 @@ const getGeoData = async (req, res) => {
     }
 };
 
-// b. POST: save geo data. latitude and longitude are required.
+// 3. POST: save geo data. latitude and longitude are required.
 // POST localhost:3000/api/geo-data
 // Body (raw JSON): the "data" from a live lookup, e.g.
 // { "name": "Orlando", "latitude": 28.5383, "longitude": -81.3792, "temperature": 26.6, "humidity": 43, ... }
@@ -131,7 +131,7 @@ const createGeoData = async (req, res) => {
     }
 };
 
-// d. GET by ID: one saved geo data entry.
+// 4. GET by ID: one saved geo data entry.
 // GET localhost:3000/api/geo-data/:id
 const getGeoDataById = async (req, res) => {
     const { id } = req.params;
