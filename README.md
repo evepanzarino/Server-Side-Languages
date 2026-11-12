@@ -331,6 +331,8 @@ Each model has 5 properties, and together they use 4 data types: String, Number,
 - `.populate('color', '-__v')` lists a pallette's colors in GET pallette by ID.
 - GET all also takes `select` from the query string, see [Query Strings](#query-strings-module-3). It still leaves `__v` out.
 
+
+
 ### **Checking the database first**
 Every `:id` function checks the object is in the database before doing anything with it, and answers with "Pallette {id} not found" or "Color {id} not found" if it isn't. GET by ID checks the result of `findById()`, and PUT and DELETE call `exists()` first, so an unknown ID gets a 404 even when a PUT body has bad values.
 
@@ -498,3 +500,4 @@ All route endpoints (localhost:3000)
 - /package-lock.json
 ### **Documentation**
 - /README.md **(That's me!)**
+
