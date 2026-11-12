@@ -1,0 +1,32 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "White",
+      "colorType": [
+        "white"
+      ],
+      "hexcode": "#ffffff",
+      "opacity": 20,
+      "pallette": "{{monochromeId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("Color is saved with opacity 20", () => {
+          pm.expect(res.data.name).to.eql("White");
+          pm.expect(res.data.opacity).to.eql(20);
+      });
+    language: text/javascript
+order: 4000

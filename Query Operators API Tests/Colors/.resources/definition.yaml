@@ -1,0 +1,3 @@
+$kind: collection
+description: "Query strings on GET /colors. Every request starts with pallette[in]={{palletteIds}}, so it only sees the 5 colors from the Setup folder: White (opacity 20), Black (100), Gold (60), Sunset Orange (80) and Turquoise (40)."
+order: 3000

@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes?_id[in]={{palletteIds}}&page=1&limit=2&select=name"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((p) => p.name.replace(" " + pm.collectionVariables.get("run"), ""));
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Page 1 is the first 2 pallettes by name", () => {
+          pm.expect(names).to.eql(["Monochrome", "Ocean"]);
+          pm.expect(res.count).to.eql(2);
+      });
+
+      pm.test("3 pallettes make 2 pages, and next links to page 2", () => {
+          pm.expect(res.pagination.page).to.eql(1);
+          pm.expect(res.pagination.limit).to.eql(2);
+          pm.expect(res.pagination.totalPages).to.eql(2);
+          pm.expect(res.pagination.prev).to.eql(null);
+          pm.expect(res.pagination.next).to.include("&page=2&limit=2&select=name");
+      });
+    language: text/javascript
+order: 1000

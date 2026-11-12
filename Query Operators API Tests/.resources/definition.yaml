@@ -1,0 +1,14 @@
+$kind: collection
+description: |-
+  Module 3 tests for the query strings on the two getAll routes, GET /pallettes and GET /colors: query operators (gt, gte, lt, lte, ne, in, nin), select, sort in both directions, skip and limit, pagination with page, and the same steps in different orders.
+
+  Every operation in a query string (filter, sort, skip, limit and select) runs in the order it's written, so "sort then limit" and "limit then sort" give different results. Each response lists the steps it ran in "query", with "count" (what came back) and "total" (everything the filters match).
+
+  Start the server with `npm run dev`, then run the collection from top to bottom. The Setup folder makes 3 pallettes and 5 colors with a new name each run. The query requests only look at those (with _id[in] or pallette[in]), so other data in the database doesn't change the results, and the Teardown folder deletes them at the end.
+variables:
+  baseUrl: http://localhost:3000
+  run: ""
+  monochromeId: ""
+  sunsetId: ""
+  oceanId: ""
+  palletteIds: ""

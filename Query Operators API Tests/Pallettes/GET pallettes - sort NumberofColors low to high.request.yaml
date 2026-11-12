@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes?_id[in]={{palletteIds}}&sort=NumberofColors&select=name,NumberofColors"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((p) => p.name.replace(" " + pm.collectionVariables.get("run"), ""));
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Fewest colors first", () => {
+          pm.expect(res.data.map((p) => p.NumberofColors)).to.eql([2, 3, 4]);
+          pm.expect(names).to.eql(["Monochrome", "Sunset", "Ocean"]);
+      });
+
+      pm.test("The sort step is in the query, after the _id filter", () => {
+          pm.expect(res.query[1]).to.eql({ sort: { NumberofColors: 1, _id: 1 } });
+      });
+    language: text/javascript
+order: 3000

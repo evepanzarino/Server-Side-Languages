@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/colors?pallette[in]={{palletteIds}}&sort=opacity&limit=2&skip=1&select=name,opacity"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((c) => c.name);
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      // Same steps as "skip 2, limit 2", but limit runs before skip.
+      pm.test("limit=2 kept White and Turquoise, then skip=1 dropped White", () => {
+          pm.expect(names).to.eql(["Turquoise"]);
+      });
+    language: text/javascript
+order: 6000

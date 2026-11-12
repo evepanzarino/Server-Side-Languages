@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes/{{sunsetId}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("The pallette and its 2 colors were deleted", () => {
+          pm.expect(res.message).to.eql("Pallette deleted along with 2 colors");
+          pm.expect(res.id).to.eql(pm.collectionVariables.get("sunsetId"));
+      });
+    language: text/javascript
+order: 2000

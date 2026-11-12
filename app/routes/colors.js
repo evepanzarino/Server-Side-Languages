@@ -15,10 +15,10 @@ const {
 
 // Error handling: validateId sends a 400 for an :id that isn't a MongoDB ID.
 // Each controller sends a 404 when no color has that ID, a 400 when the
-// body breaks a schema rule (including a pallette that doesn't exist), and a
-// 500 for anything else.
+// body breaks a schema rule (including a pallette that doesn't exist), and a 500 for anything else.
 
 // 1. GET all colors
+// Pagination: GET /colors?page=1, GET /colors?page=2&limit=5
 router.get('/', getAllColors);
 
 // 2. GET a color by ID (with its pallette)

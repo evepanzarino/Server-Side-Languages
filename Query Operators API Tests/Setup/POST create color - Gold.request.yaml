@@ -1,0 +1,32 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Gold",
+      "colorType": [
+        "yellow"
+      ],
+      "hexcode": "#ffd700",
+      "opacity": 60,
+      "pallette": "{{sunsetId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("Color is saved with opacity 60", () => {
+          pm.expect(res.data.name).to.eql("Gold");
+          pm.expect(res.data.opacity).to.eql(60);
+      });
+    language: text/javascript
+order: 6000

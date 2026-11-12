@@ -6,6 +6,7 @@ const userRoutes = require('./routes');
 const bookRoutes = require('./routes/books');
 const palletteRoutes = require('./routes/pallettes');
 const colorRoutes = require('./routes/colors');
+const geoDataRoutes = require('./routes/geoData');
 const messages = require('./messages/messages');
 const { metadata } = require('./controllers/responses');
 
@@ -33,6 +34,8 @@ app.use('/books', bookRoutes);
 app.use('/pallettes', palletteRoutes);
 // Context name: every color route (MongoDB) lives under localhost:3000/colors.
 app.use('/colors', colorRoutes);
+// Context name: the geospatial API routes live under localhost:3000/api/geo-data.
+app.use('/api/geo-data', geoDataRoutes);
 
 // A request that matched none of the routes above gets a JSON 404.
 app.use((req, res) => {

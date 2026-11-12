@@ -4,7 +4,7 @@ const http = require('http');
 // Load the variables in .env (like PORT and MONGODB_URI) into process.env.
 require('dotenv').config();
 
-const connectDB = require('./app/db/config');
+const connectDB = require('./app/config/db');
 
 // Use the PORT from .env, or 3000 if it isn't set.
 const PORT = process.env.PORT || 3000;

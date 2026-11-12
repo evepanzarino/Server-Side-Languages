@@ -19,6 +19,7 @@ const {
 // anything else.
 
 // 1. GET all pallettes
+// Pagination: GET /pallettes?page=1, GET /pallettes?page=2&limit=5
 router.get('/', getAllPallettes);
 
 // 2. GET a pallette by ID (with its colors)

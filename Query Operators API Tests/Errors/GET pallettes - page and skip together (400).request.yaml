@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes?page=2&skip=2"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("Message says what's wrong", () => {
+          pm.expect(res.message).to.eql("page does the skipping, so use page or skip, not both");
+      });
+    language: text/javascript
+order: 7000

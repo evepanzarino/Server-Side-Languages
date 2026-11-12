@@ -103,3 +103,633 @@
     "opacity": 100,
     "pallette": "Shades of Red"
 }
+{
+    "name": "Blue",
+    "colorType": "blue",
+    "hexcode": "#0000FF",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Black",
+    "colorType": "Black",
+    "hexcode": "#000000",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "White",
+    "colorType": "White",
+    "hexcode": "#FFFFFF",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Bright Blue",
+    "colorType": ["blue", "white"],
+    "hexcode": "#3333FF",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Light Blue",
+    "colorType": ["blue", "white"],
+    "hexcode": "#6666FF",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Pastel Blue",
+    "colorType": ["blue", "white"],
+    "hexcode": "#9999FF",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Periwinkle",
+    "colorType": ["blue", "white"],
+    "hexcode": "#CCCCFF",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Dark Blue",
+    "colorType": ["blue", "black"],
+    "hexcode": "#0000CC",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Deep Blue",
+    "colorType": ["blue", "black"],
+    "hexcode": "#000099",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Navy Blue",
+    "colorType": ["blue", "black"],
+    "hexcode": "#000066",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Darkest Blue",
+    "colorType": ["blue", "black"],
+    "hexcode": "#000033",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Denim Blue",
+    "colorType": ["blue", "black"],
+    "hexcode": "#333399",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Dusty Blue",
+    "colorType": ["blue", "black"],
+    "hexcode": "#6666A6",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Midnight Blue",
+    "colorType": ["blue", "black"],
+    "hexcode": "#1A1A66",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Grayish Blue",
+    "colorType": ["blue", "black"],
+    "hexcode": "#33334D",
+    "opacity": 100,
+    "pallette": "Shades of Blue"
+}
+{
+    "name": "Orange",
+    "colorType": "orange",
+    "hexcode": "#FF8000",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Black",
+    "colorType": "Black",
+    "hexcode": "#000000",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "White",
+    "colorType": "White",
+    "hexcode": "#FFFFFF",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Bright Orange",
+    "colorType": ["orange", "white"],
+    "hexcode": "#FF9933",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Light Orange",
+    "colorType": ["orange", "white"],
+    "hexcode": "#FFB366",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Pastel Orange",
+    "colorType": ["orange", "white"],
+    "hexcode": "#FFCC99",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Pale Peach",
+    "colorType": ["orange", "white"],
+    "hexcode": "#FFE6CC",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Dark Orange",
+    "colorType": ["orange", "black"],
+    "hexcode": "#CC6600",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Burnt Orange",
+    "colorType": ["orange", "black"],
+    "hexcode": "#994D00",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Brown Orange",
+    "colorType": ["orange", "black"],
+    "hexcode": "#663300",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Darkest Orange",
+    "colorType": ["orange", "black"],
+    "hexcode": "#331A00",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Copper Orange",
+    "colorType": ["orange", "black"],
+    "hexcode": "#996633",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Dusty Orange",
+    "colorType": ["orange", "black"],
+    "hexcode": "#A68666",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Dark Copper Orange",
+    "colorType": ["orange", "black"],
+    "hexcode": "#66401A",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Grayish Orange",
+    "colorType": ["orange", "black"],
+    "hexcode": "#4D4033",
+    "opacity": 100,
+    "pallette": "Shades of Orange"
+}
+{
+    "name": "Yellow",
+    "colorType": "yellow",
+    "hexcode": "#FFFF00",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Black",
+    "colorType": "Black",
+    "hexcode": "#000000",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "White",
+    "colorType": "White",
+    "hexcode": "#FFFFFF",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Bright Yellow",
+    "colorType": ["yellow", "white"],
+    "hexcode": "#FFFF33",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Light Yellow",
+    "colorType": ["yellow", "white"],
+    "hexcode": "#FFFF66",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Pastel Yellow",
+    "colorType": ["yellow", "white"],
+    "hexcode": "#FFFF99",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Cream",
+    "colorType": ["yellow", "white"],
+    "hexcode": "#FFFFCC",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Dark Yellow",
+    "colorType": ["yellow", "black"],
+    "hexcode": "#CCCC00",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Olive Yellow",
+    "colorType": ["yellow", "black"],
+    "hexcode": "#999900",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Dark Olive",
+    "colorType": ["yellow", "black"],
+    "hexcode": "#666600",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Darkest Yellow",
+    "colorType": ["yellow", "black"],
+    "hexcode": "#333300",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Khaki Yellow",
+    "colorType": ["yellow", "black"],
+    "hexcode": "#999933",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Dusty Yellow",
+    "colorType": ["yellow", "black"],
+    "hexcode": "#A6A666",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Dark Khaki Yellow",
+    "colorType": ["yellow", "black"],
+    "hexcode": "#66661A",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Grayish Yellow",
+    "colorType": ["yellow", "black"],
+    "hexcode": "#4D4D33",
+    "opacity": 100,
+    "pallette": "Shades of Yellow"
+}
+{
+    "name": "Green",
+    "colorType": "green",
+    "hexcode": "#00FF00",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Black",
+    "colorType": "Black",
+    "hexcode": "#000000",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "White",
+    "colorType": "White",
+    "hexcode": "#FFFFFF",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Bright Green",
+    "colorType": ["green", "white"],
+    "hexcode": "#33FF33",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Light Green",
+    "colorType": ["green", "white"],
+    "hexcode": "#66FF66",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Pastel Green",
+    "colorType": ["green", "white"],
+    "hexcode": "#99FF99",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Pale Mint",
+    "colorType": ["green", "white"],
+    "hexcode": "#CCFFCC",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Dark Green",
+    "colorType": ["green", "black"],
+    "hexcode": "#00CC00",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Deep Green",
+    "colorType": ["green", "black"],
+    "hexcode": "#009900",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Forest Green",
+    "colorType": ["green", "black"],
+    "hexcode": "#006600",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Darkest Green",
+    "colorType": ["green", "black"],
+    "hexcode": "#003300",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Leaf Green",
+    "colorType": ["green", "black"],
+    "hexcode": "#339933",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Dusty Green",
+    "colorType": ["green", "black"],
+    "hexcode": "#66A666",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Dark Leaf Green",
+    "colorType": ["green", "black"],
+    "hexcode": "#1A661A",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Grayish Green",
+    "colorType": ["green", "black"],
+    "hexcode": "#334D33",
+    "opacity": 100,
+    "pallette": "Shades of Green"
+}
+{
+    "name": "Purple",
+    "colorType": "purple",
+    "hexcode": "#8000FF",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Black",
+    "colorType": "Black",
+    "hexcode": "#000000",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "White",
+    "colorType": "White",
+    "hexcode": "#FFFFFF",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Bright Purple",
+    "colorType": ["purple", "white"],
+    "hexcode": "#9933FF",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Light Purple",
+    "colorType": ["purple", "white"],
+    "hexcode": "#B366FF",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Pastel Purple",
+    "colorType": ["purple", "white"],
+    "hexcode": "#CC99FF",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Pale Lavender",
+    "colorType": ["purple", "white"],
+    "hexcode": "#E6CCFF",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Dark Purple",
+    "colorType": ["purple", "black"],
+    "hexcode": "#6600CC",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Deep Purple",
+    "colorType": ["purple", "black"],
+    "hexcode": "#4D0099",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Indigo",
+    "colorType": ["purple", "black"],
+    "hexcode": "#330066",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Darkest Purple",
+    "colorType": ["purple", "black"],
+    "hexcode": "#1A0033",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Rebecca Purple",
+    "colorType": ["purple", "black"],
+    "hexcode": "#663399",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Dusty Purple",
+    "colorType": ["purple", "black"],
+    "hexcode": "#8666A6",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Dark Rebecca Purple",
+    "colorType": ["purple", "black"],
+    "hexcode": "#401A66",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Grayish Purple",
+    "colorType": ["purple", "black"],
+    "hexcode": "#40334D",
+    "opacity": 100,
+    "pallette": "Shades of Purple"
+}
+{
+    "name": "Black",
+    "colorType": "Black",
+    "hexcode": "#000000",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "White",
+    "colorType": "White",
+    "hexcode": "#FFFFFF",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Off Black",
+    "colorType": ["black", "white"],
+    "hexcode": "#0D0D0D",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Jet Black",
+    "colorType": ["black", "white"],
+    "hexcode": "#1A1A1A",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Onyx",
+    "colorType": ["black", "white"],
+    "hexcode": "#262626",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Charcoal",
+    "colorType": ["black", "white"],
+    "hexcode": "#333333",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Dark Gray",
+    "colorType": ["black", "white"],
+    "hexcode": "#4D4D4D",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Dim Gray",
+    "colorType": ["black", "white"],
+    "hexcode": "#666666",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Gray",
+    "colorType": ["black", "white"],
+    "hexcode": "#808080",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Medium Gray",
+    "colorType": ["black", "white"],
+    "hexcode": "#999999",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Silver",
+    "colorType": ["black", "white"],
+    "hexcode": "#B3B3B3",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Light Gray",
+    "colorType": ["black", "white"],
+    "hexcode": "#CCCCCC",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Gainsboro",
+    "colorType": ["black", "white"],
+    "hexcode": "#D9D9D9",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Platinum",
+    "colorType": ["black", "white"],
+    "hexcode": "#E6E6E6",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}
+{
+    "name": "Off White",
+    "colorType": ["black", "white"],
+    "hexcode": "#F2F2F2",
+    "opacity": 100,
+    "pallette": "Shades of Black & White"
+}

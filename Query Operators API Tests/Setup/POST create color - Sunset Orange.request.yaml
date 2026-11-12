@@ -1,0 +1,33 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Sunset Orange",
+      "colorType": [
+        "orange",
+        "red"
+      ],
+      "hexcode": "#ff4500",
+      "opacity": 80,
+      "pallette": "{{sunsetId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("Color is saved with opacity 80", () => {
+          pm.expect(res.data.name).to.eql("Sunset Orange");
+          pm.expect(res.data.opacity).to.eql(80);
+      });
+    language: text/javascript
+order: 7000

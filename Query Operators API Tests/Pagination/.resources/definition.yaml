@@ -1,0 +1,3 @@
+$kind: collection
+description: "Pagination with page: page=2&limit=2 is page 2, with 2 to a page (10 when there's no limit). Each response has a pagination part with page, limit, totalPages, and prev and next links that keep the rest of the query string. Only the pallettes and colors from the Setup folder are used."
+order: 3500

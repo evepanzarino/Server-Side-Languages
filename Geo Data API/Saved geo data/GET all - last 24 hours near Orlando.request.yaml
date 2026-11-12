@@ -1,0 +1,37 @@
+$kind: http-request
+url: "{{baseUrl}}/api/geo-data?observedAt[gte]={{since}}&latitude[gte]=28&latitude[lte]=29&longitude[gte]=-82&longitude[lte]=-81&sort=-observedAt&select=name,latitude,longitude,temperature,observedAt"
+method: GET
+scripts:
+  - type: beforeRequest
+    code: |-
+      // The date range starts 24 hours ago.
+      pm.collectionVariables.set("since", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const since = new Date(pm.collectionVariables.get("since"));
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("The list has the entry that was just saved", () => {
+          pm.expect(res.data.map((entry) => entry._id)).to.include(pm.collectionVariables.get("geoId"));
+      });
+
+      pm.test("Every entry is from the last 24 hours, inside the box around Orlando", () => {
+          res.data.forEach((entry) => {
+              pm.expect(new Date(entry.observedAt) >= since).to.be.true;
+              pm.expect(entry.latitude).to.be.within(28, 29);
+              pm.expect(entry.longitude).to.be.within(-82, -81);
+          });
+      });
+
+      pm.test("select only sent back the fields asked for", () => {
+          res.data.forEach((entry) => {
+              pm.expect(Object.keys(entry).sort()).to.eql(["_id", "latitude", "longitude", "name", "observedAt", "temperature"]);
+          });
+      });
+    language: text/javascript
+order: 3000

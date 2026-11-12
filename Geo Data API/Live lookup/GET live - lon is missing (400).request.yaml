@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/geo-data?lat=28.5383"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("Message says what's wrong", () => {
+          pm.expect(res.message).to.eql("A live lookup needs both lat and lon, like ?lat=28.5383&lon=-81.3792");
+      });
+    language: text/javascript
+order: 2000

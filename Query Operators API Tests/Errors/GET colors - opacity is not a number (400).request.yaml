@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/colors?opacity[gte]=abc"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("Message says what's wrong", () => {
+          pm.expect(res.message).to.eql('opacity[gte] must be a number (got "abc")');
+      });
+    language: text/javascript
+order: 1000

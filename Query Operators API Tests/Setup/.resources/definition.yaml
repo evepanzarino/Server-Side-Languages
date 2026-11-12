@@ -1,0 +1,3 @@
+$kind: collection
+description: "Makes the test data: 3 pallettes (Monochrome with 2 hexcodes, Sunset with 3, Ocean with 4) and 5 colors with opacities 20, 40, 60, 80 and 100."
+order: 1000

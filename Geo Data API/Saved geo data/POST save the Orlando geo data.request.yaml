@@ -1,0 +1,33 @@
+$kind: http-request
+url: "{{baseUrl}}/api/geo-data"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {{liveData}}
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const sent = JSON.parse(pm.collectionVariables.get("liveData"));
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("Success message with the saved document's ID", () => {
+          pm.expect(res.message).to.eql("Geo data saved");
+          pm.expect(res.id).to.match(/^[0-9a-f]{24}$/);
+          pm.expect(res.data._id).to.eql(res.id);
+      });
+
+      pm.test("The saved data is the data from the live lookup", () => {
+          pm.expect(res.data).to.include({ name: sent.name, latitude: sent.latitude, longitude: sent.longitude, temperature: sent.temperature });
+          pm.expect(res.data).to.not.have.property("__v");
+      });
+
+      pm.collectionVariables.set("geoId", res.id);
+    language: text/javascript
+order: 1000

@@ -1,0 +1,3 @@
+$kind: collection
+description: "POST saves geo data in MongoDB. GET lists it with query strings, and GET by ID finds one entry."
+order: 2000

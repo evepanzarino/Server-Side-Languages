@@ -1,0 +1,11 @@
+$kind: collection
+description: |-
+  Module 3 (3.3) geospatial API. GET /api/geo-data with lat and lon fetches the weather at that location from the Open-Meteo API (https://open-meteo.com/en/docs, no API key needed). POST /api/geo-data saves it in MongoDB, and GET /api/geo-data lists the saved data with the same query strings as the other getAll routes, like a date range or a box of latitudes and longitudes.
+
+  Start the server with `npm run dev`, then run the collection from top to bottom. The live lookup saves its data in {{liveData}}, POST saves it and keeps the new ID in {{geoId}}. Each run adds one entry to the geodata collection.
+variables:
+  baseUrl: http://localhost:3000
+  missingId: "000000000000000000000000"
+  liveData: ""
+  geoId: ""
+  since: ""

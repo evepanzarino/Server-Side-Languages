@@ -1,0 +1,3 @@
+$kind: collection
+description: "Deletes the 3 pallettes from the Setup folder. Deleting a pallette deletes its colors too."
+order: 5000

@@ -1,0 +1,34 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Sunset {{run}}",
+      "Description": "Warm sunset colors",
+      "colorTypes": "red, orange, yellow",
+      "hexcodes": [
+        "#ff4500",
+        "#ffa500",
+        "#ffd700"
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("NumberofColors counts the 3 hexcodes", () => {
+          pm.expect(res.data.NumberofColors).to.eql(3);
+      });
+
+      pm.collectionVariables.set("sunsetId", res.data._id);
+    language: text/javascript
+order: 2000

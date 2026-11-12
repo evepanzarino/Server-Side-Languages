@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/geo-data/orlando"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("Message says what's wrong", () => {
+          pm.expect(res.message).to.eql("orlando is not a valid ID");
+      });
+    language: text/javascript
+order: 6000

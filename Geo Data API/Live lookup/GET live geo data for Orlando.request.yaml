@@ -1,0 +1,30 @@
+$kind: http-request
+url: "{{baseUrl}}/api/geo-data?lat=28.5383&lon=-81.3792&name=Orlando"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Message says the data came from Open-Meteo", () => {
+          pm.expect(res.message).to.eql("Live geo data from the Open-Meteo API");
+      });
+
+      pm.test("data has the location and the weather there", () => {
+          pm.expect(res.data).to.include({ name: "Orlando", latitude: 28.5383, longitude: -81.3792 });
+          pm.expect(res.data.temperature).to.be.a("number");
+          pm.expect(res.data.humidity).to.be.within(0, 100);
+          pm.expect(res.data.windSpeed).to.be.at.least(0);
+          pm.expect(res.data.conditions).to.be.a("string");
+          pm.expect(res.data.timezone).to.eql("America/New_York");
+          pm.expect(new Date(res.data.observedAt).toString()).to.not.eql("Invalid Date");
+      });
+
+      // Save the data so POST can save it to MongoDB.
+      pm.collectionVariables.set("liveData", JSON.stringify(res.data));
+    language: text/javascript
+order: 1000

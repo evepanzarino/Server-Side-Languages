@@ -1,0 +1,3 @@
+$kind: collection
+description: "GET /api/geo-data with lat and lon asks the Open-Meteo API about that location."
+order: 1000

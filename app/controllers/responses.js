@@ -25,6 +25,15 @@ const castMessage = (error) => {
 // Every controller's catch block calls this. It turns the error into a JSON
 // response with the matching status code.
 const handleError = (error, req, res) => {
+    // An error made with httpError() already has its status code, like 400 for a
+    // bad query string or 502 when the geospatial API fails.
+    if (error.name === 'HttpError') {
+        return res.status(error.status).json({
+            message: error.message,
+            metadata: metadata(req),
+        });
+    }
+
     // 400: one or more fields broke a schema rule (required, min, max, enum,
     // custom validators). Each field's message is listed under "errors".
     if (error.name === 'ValidationError') {

@@ -4,3 +4,39 @@
 "colorTypes": "Red, White, Black",
 "hexcodes": "#FF0000, #FFFFFF, #000000,#FF3333, #FF6666, #FF9999, #FFCCCC, #CC0000, #990000, #660000, #330000, #993333, #A66666, #661A1A, #4D3333"
 } 
+{
+    "name": "Shades of Blue",
+    "Description": "Different shades of blue. Using pure blue, black, & white together.",
+    "colorTypes": "Blue, White, Black",
+    "hexcodes": "#0000FF, #FFFFFF, #000000, #3333FF, #6666FF, #9999FF, #CCCCFF, #0000CC, #000099, #000066, #000033, #333399, #6666A6, #1A1A66, #33334D"
+}
+{
+    "name": "Shades of Orange",
+    "Description": "Different shades of orange. Using pure orange, black, & white together.",
+    "colorTypes": "Orange, White, Black",
+    "hexcodes": "#FF8000, #FFFFFF, #000000, #FF9933, #FFB366, #FFCC99, #FFE6CC, #CC6600, #994D00, #663300, #331A00, #996633, #A68666, #66401A, #4D4033"
+}
+{
+    "name": "Shades of Yellow",
+    "Description": "Different shades of yellow. Using pure yellow, black, & white together.",
+    "colorTypes": "Yellow, White, Black",
+    "hexcodes": "#FFFF00, #FFFFFF, #000000, #FFFF33, #FFFF66, #FFFF99, #FFFFCC, #CCCC00, #999900, #666600, #333300, #999933, #A6A666, #66661A, #4D4D33"
+}
+{
+    "name": "Shades of Green",
+    "Description": "Different shades of green. Using pure green, black, & white together.",
+    "colorTypes": "Green, White, Black",
+    "hexcodes": "#00FF00, #FFFFFF, #000000, #33FF33, #66FF66, #99FF99, #CCFFCC, #00CC00, #009900, #006600, #003300, #339933, #66A666, #1A661A, #334D33"
+}
+{
+    "name": "Shades of Purple",
+    "Description": "Different shades of purple. Using pure purple, black, & white together.",
+    "colorTypes": "Purple, White, Black",
+    "hexcodes": "#8000FF, #FFFFFF, #000000, #9933FF, #B366FF, #CC99FF, #E6CCFF, #6600CC, #4D0099, #330066, #1A0033, #663399, #8666A6, #401A66, #40334D"
+}
+{
+    "name": "Shades of Black & White",
+    "Description": "Different shades of gray. Using pure black & white, and the grays in between.",
+    "colorTypes": "Black, White",
+    "hexcodes": "#000000, #FFFFFF, #0D0D0D, #1A1A1A, #262626, #333333, #4D4D4D, #666666, #808080, #999999, #B3B3B3, #CCCCCC, #D9D9D9, #E6E6E6, #F2F2F2"
+}

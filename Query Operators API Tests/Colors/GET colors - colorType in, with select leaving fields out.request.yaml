@@ -1,0 +1,24 @@
+$kind: http-request
+url: "{{baseUrl}}/colors?pallette[in]={{palletteIds}}&colorType[in]=red,blue&select=-pallette,-hexcode"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((c) => c.name);
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Only colors with red or blue in colorType", () => {
+          pm.expect(names).to.eql(["Sunset Orange", "Turquoise"]);
+      });
+
+      pm.test("select left out pallette, hexcode and __v", () => {
+          res.data.forEach((c) => {
+              pm.expect(Object.keys(c).sort()).to.eql(["_id", "colorType", "name", "opacity"]);
+          });
+      });
+    language: text/javascript
+order: 2000

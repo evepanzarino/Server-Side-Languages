@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes?limit=500"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("Message says what's wrong", () => {
+          pm.expect(res.message).to.eql("limit must be a whole number from 1 to 100");
+      });
+    language: text/javascript
+order: 6000

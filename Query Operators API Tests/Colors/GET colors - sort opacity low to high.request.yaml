@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/colors?pallette[in]={{palletteIds}}&sort=opacity&select=name,opacity"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((c) => c.name);
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Most see-through first", () => {
+          pm.expect(res.data.map((c) => c.opacity)).to.eql([20, 40, 60, 80, 100]);
+          pm.expect(names).to.eql(["White", "Turquoise", "Gold", "Sunset Orange", "Black"]);
+      });
+    language: text/javascript
+order: 3000

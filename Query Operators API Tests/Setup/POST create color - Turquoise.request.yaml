@@ -1,0 +1,33 @@
+$kind: http-request
+url: "{{baseUrl}}/colors"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Turquoise",
+      "colorType": [
+        "blue",
+        "green"
+      ],
+      "hexcode": "#40e0d0",
+      "opacity": 40,
+      "pallette": "{{oceanId}}"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("Color is saved with opacity 40", () => {
+          pm.expect(res.data.name).to.eql("Turquoise");
+          pm.expect(res.data.opacity).to.eql(40);
+      });
+    language: text/javascript
+order: 8000

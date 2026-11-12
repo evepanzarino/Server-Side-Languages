@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes?_id[in]={{palletteIds}}&select=name,NumberofColors&sort=-NumberofColors&skip=1&NumberofColors[gt]=2&limit=1"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((p) => p.name.replace(" " + pm.collectionVariables.get("run"), ""));
+      const steps = res.query.map((step) => Object.keys(step)[0]);
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      // select, then sort (most colors first: Ocean 4, Sunset 3, Monochrome 2),
+      // then skip 1, then keep the ones with over 2 colors, then limit 1.
+      pm.test("Each step ran on what the step before it left", () => {
+          pm.expect(names).to.eql(["Sunset"]);
+          pm.expect(Object.keys(res.data[0]).sort()).to.eql(["NumberofColors", "_id", "name"]);
+      });
+
+      pm.test("The query lists the steps in the order they were written", () => {
+          pm.expect(steps).to.eql(["filter", "select", "sort", "skip", "filter", "limit"]);
+      });
+
+      pm.test("total counts the pallettes both filters match", () => {
+          pm.expect(res.count).to.eql(1);
+          pm.expect(res.total).to.eql(2);
+      });
+    language: text/javascript
+order: 9000

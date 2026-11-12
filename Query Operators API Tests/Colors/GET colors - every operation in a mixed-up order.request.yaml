@@ -1,0 +1,30 @@
+$kind: http-request
+url: "{{baseUrl}}/colors?pallette[in]={{palletteIds}}&sort=-opacity,name&skip=1&opacity[gt]=20&limit=2&select=name,opacity,pallette"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((c) => c.name);
+      const steps = res.query.map((step) => Object.keys(step)[0]);
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      // sort (most solid first: Black, Sunset Orange, Gold, Turquoise, White), skip Black,
+      // keep the ones over 20, keep 2, then select.
+      pm.test("Each step ran on what the step before it left", () => {
+          pm.expect(names).to.eql(["Sunset Orange", "Gold"]);
+          pm.expect(steps).to.eql(["filter", "sort", "skip", "filter", "limit", "select"]);
+      });
+
+      pm.test("select kept the pallette, so populate() shows it", () => {
+          res.data.forEach((c) => {
+              pm.expect(Object.keys(c).sort()).to.eql(["_id", "name", "opacity", "pallette"]);
+              pm.expect(c.pallette._id).to.eql(pm.collectionVariables.get("sunsetId"));
+              pm.expect(c.pallette).to.not.have.property("__v");
+          });
+      });
+    language: text/javascript
+order: 9000

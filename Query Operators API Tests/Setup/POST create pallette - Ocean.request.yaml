@@ -1,0 +1,41 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Ocean {{run}}",
+      "Description": "Cool blues and greens of the sea",
+      "colorTypes": "blue, green",
+      "hexcodes": [
+        "#006994",
+        "#40e0d0",
+        "#2e8b57",
+        "#000080"
+      ]
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("NumberofColors counts the 4 hexcodes", () => {
+          pm.expect(res.data.NumberofColors).to.eql(4);
+      });
+
+      pm.collectionVariables.set("oceanId", res.data._id);
+      // The query requests use this list to only look at this run's pallettes.
+      pm.collectionVariables.set("palletteIds", [
+          pm.collectionVariables.get("monochromeId"),
+          pm.collectionVariables.get("sunsetId"),
+          pm.collectionVariables.get("oceanId"),
+      ].join(","));
+    language: text/javascript
+order: 3000

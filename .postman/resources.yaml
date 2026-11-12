@@ -6,6 +6,8 @@ localResources:
     - ../Colors and Pallettes API
     - ../Pallettes API Tests
     - ../Users API
+    - ../Query Operators API Tests
+    - ../Geo Data API
 
 # Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
 

@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/colors?pallette[in]={{palletteIds}}&opacity[gte]=40&opacity[lt]=100&select=name,opacity"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((c) => c.name);
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Only colors with opacity from 40 up to (not including) 100", () => {
+          pm.expect(names).to.eql(["Gold", "Sunset Orange", "Turquoise"]);
+          res.data.forEach((c) => {
+              pm.expect(c.opacity).to.be.at.least(40);
+              pm.expect(c.opacity).to.be.below(100);
+          });
+      });
+
+      pm.test("select only sent back _id, name and opacity (no pallette)", () => {
+          res.data.forEach((c) => {
+              pm.expect(Object.keys(c).sort()).to.eql(["_id", "name", "opacity"]);
+          });
+      });
+    language: text/javascript
+order: 1000

@@ -1,4 +1,4 @@
-// Messages module: every message the pallettes and colors code sends back.
+// Messages module: every message the pallettes, colors and geo data code sends back.
 // Messages that include a value, like an ID, are functions that take that value.
 // {VALUE} in a validation message is filled in by Mongoose.
 const messages = {
@@ -56,6 +56,54 @@ const messages = {
     OPACITY_TOO_HIGH: 'opacity cannot be more than 100',
     PALLETTE_REQUIRED: 'pallette is required',
     PALLETTE_MISSING: 'pallette {VALUE} does not exist',
+
+    // Query strings on the getAll routes (app/utils/queryPipeline.js)
+    QUERY_UNKNOWN_FIELD: (field, fields) => `"${field}" is not a field. Use one of: ${fields.join(', ')}`,
+    QUERY_FIELD_LEFT_OUT: (key, field) => `${key} uses ${field}, but a select before it left ${field} out`,
+    QUERY_UNKNOWN_OPERATOR: (operator) => `${operator} is not a query operator. Use one of: eq, ne, gt, gte, lt, lte, in, nin`,
+    QUERY_BAD_KEY: (key) => `${key} is not something a query string can use`,
+    QUERY_EMPTY_VALUE: (key) => `${key} needs a value`,
+    QUERY_NOT_A_NUMBER: (key, value) => `${key} must be a number (got "${value}")`,
+    QUERY_NOT_A_DATE: (key, value) => `${key} must be a date, like 2026-11-15 (got "${value}")`,
+    QUERY_NOT_AN_ID: (key, value) => `${key} must be a MongoDB ID (got "${value}")`,
+    QUERY_SORT_TWICE: (field) => `sort has ${field} in it more than once`,
+    QUERY_SELECT_MIX: 'select can list fields to show, or fields to leave out with a -, but not both',
+    QUERY_KEY_TWICE: (key) => `${key} is in the query string more than once`,
+    QUERY_LIMIT_INVALID: (max) => `limit must be a whole number from 1 to ${max}`,
+    QUERY_SKIP_INVALID: 'skip must be a whole number, 0 or more',
+    QUERY_PAGE_INVALID: 'page must be a whole number, 1 or more',
+    QUERY_PAGE_AND_SKIP: 'page does the skipping, so use page or skip, not both',
+
+    // Geo data responses (app/controllers/geoDataController.js)
+    GEO_DATA_FETCHED: 'Live geo data from the Open-Meteo API',
+    GEO_DATA_SAVED: 'Geo data saved',
+    GEO_DATA_FOUND: 'Get all geo data',
+    GEO_DATA_FOUND_BY_ID: 'Get geo data by ID',
+    GEO_DATA_NOT_FOUND: (id) => `Geo data ${id} not found`,
+
+    // Live lookups: GET /api/geo-data?lat=...&lon=... (app/controllers/geoDataController.js)
+    GEO_LOCATION_REQUIRED: 'A live lookup needs both lat and lon, like ?lat=28.5383&lon=-81.3792',
+    GEO_LAT_INVALID: (value) => `lat must be a number from -90 to 90 (got "${value}")`,
+    GEO_LON_INVALID: (value) => `lon must be a number from -180 to 180 (got "${value}")`,
+    GEO_NAME_INVALID: 'name must be 1 to 100 characters',
+    GEO_LIVE_EXTRA_KEYS: (keys) => `A live lookup only takes lat, lon and name (also got ${keys.join(', ')})`,
+
+    // Calls to the Open-Meteo API (app/services/geoService.js)
+    GEO_API_RATE_LIMITED: (seconds) => `Too many calls to the geospatial API. Try again in ${seconds} ${seconds === 1 ? 'second' : 'seconds'}`,
+    GEO_API_FAILED: (status, reason) => `The geospatial API answered with an error (${status})${reason ? `: ${reason}` : ''}`,
+    GEO_API_UNREACHABLE: 'Could not reach the geospatial API',
+    GEO_API_TIMEOUT: (ms) => `The geospatial API did not answer within ${ms / 1000} seconds`,
+    GEO_API_BAD_DATA: 'The geospatial API sent back data this app could not read',
+
+    // Geo data validation (app/models/GeoData.js)
+    GEO_NAME_TOO_LONG: 'name must be 100 characters or fewer',
+    LATITUDE_REQUIRED: 'latitude is required',
+    LATITUDE_OUT_OF_RANGE: 'latitude must be from -90 to 90',
+    LONGITUDE_REQUIRED: 'longitude is required',
+    LONGITUDE_OUT_OF_RANGE: 'longitude must be from -180 to 180',
+    HUMIDITY_OUT_OF_RANGE: 'humidity must be from 0 to 100',
+    WIND_SPEED_TOO_LOW: 'windSpeed cannot be less than 0',
+    WEATHER_CODE_OUT_OF_RANGE: 'weatherCode must be from 0 to 99',
 };
 
 module.exports = messages;

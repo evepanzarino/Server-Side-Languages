@@ -1,0 +1,38 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Monochrome {{run}}",
+      "Description": "Just black and white",
+      "colorTypes": "black, white",
+      "hexcodes": [
+        "#000000",
+        "#ffffff"
+      ]
+    }
+scripts:
+  - type: beforeRequest
+    code: |-
+      // Pallette names are unique, so each run adds a number to the names.
+      pm.collectionVariables.set("run", Date.now());
+    language: text/javascript
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 201", () => {
+          pm.response.to.have.status(201);
+      });
+
+      pm.test("NumberofColors counts the 2 hexcodes", () => {
+          pm.expect(res.data.NumberofColors).to.eql(2);
+      });
+
+      pm.collectionVariables.set("monochromeId", res.data._id);
+    language: text/javascript
+order: 1000

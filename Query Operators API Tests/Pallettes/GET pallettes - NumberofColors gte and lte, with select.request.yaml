@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/pallettes?_id[in]={{palletteIds}}&NumberofColors[gte]=3&NumberofColors[lte]=4&select=name,NumberofColors"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+      const names = res.data.map((p) => p.name.replace(" " + pm.collectionVariables.get("run"), ""));
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Only the pallettes with 3 to 4 colors, sorted by name", () => {
+          pm.expect(names).to.eql(["Ocean", "Sunset"]);
+          res.data.forEach((p) => {
+              pm.expect(p.NumberofColors).to.be.within(3, 4);
+          });
+      });
+
+      pm.test("select only sent back _id, name and NumberofColors", () => {
+          res.data.forEach((p) => {
+              pm.expect(Object.keys(p).sort()).to.eql(["NumberofColors", "_id", "name"]);
+          });
+      });
+    language: text/javascript
+order: 1000

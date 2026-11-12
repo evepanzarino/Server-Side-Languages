@@ -1,0 +1,3 @@
+$kind: collection
+description: "Query strings on GET /pallettes. Every request starts with _id[in]={{palletteIds}}, so it only sees the 3 pallettes from the Setup folder: Monochrome (2 colors), Sunset (3) and Ocean (4)."
+order: 2000

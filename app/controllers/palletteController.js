@@ -4,6 +4,8 @@ const Pallette = require('../models/Pallettes');
 const Color = require('../models/Colors');
 const messages = require('../messages/messages');
 const { metadata, notFound, handleError } = require('./responses');
+const { queryPipeline, pagination } = require('../utils/queryPipeline');
+const { findPallettes } = require('../services/palletteService');
 
 // NumberofColors counts the hexcodes. One hex code sent as a string counts as 1.
 // No hexcodes sent means no count, so a PUT without hexcodes keeps the old number.
@@ -22,15 +24,24 @@ const palletteFields = ({ name, Description, colorTypes, hexcodes } = {}) => ({
     NumberofColors: countHexcodes(hexcodes),
 });
 
-// 1. GET all: every pallette, sorted by name.
+// 1. GET all: pallettes, 10 at a time, sorted by name.
 // GET localhost:3000/pallettes
+// The query string can filter, sort, skip, limit and select, and each one runs
+// in the order it's written (app/utils/queryPipeline.js), e.g.
+// GET localhost:3000/pallettes?NumberofColors[gte]=3&sort=-NumberofColors&skip=1&limit=2&select=name,NumberofColors
+// Pagination: GET localhost:3000/pallettes?page=1 is the first 10, ?page=2&limit=5 is pallettes 6 to 10.
 const getAllPallettes = async (req, res) => {
     try {
-        // select('-__v') leaves Mongoose's version key out of the response.
-        const pallettes = await Pallette.find({}).select('-__v').sort({ name: 1 });
+        const steps = queryPipeline(req, Pallette.schema, { defaultSort: 'name' });
+        const { data, total, pageTotal } = await findPallettes(steps);
         res.status(200).json({
             message: messages.PALLETTES_FOUND,
-            data: pallettes,
+            query: steps,
+            count: data.length,
+            total,
+            // Only there when the query string has a page.
+            pagination: pagination(req, steps, pageTotal),
+            data,
             metadata: metadata(req),
         });
     } catch (error) {

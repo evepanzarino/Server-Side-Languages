@@ -1,0 +1,28 @@
+$kind: http-request
+url: "{{baseUrl}}/colors?pallette[in]={{palletteIds}}&sort=opacity&page=2&limit=2&select=name,opacity"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 200", () => {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("The sort runs first, so page 2 is the 3rd and 4th most see-through", () => {
+          pm.expect(res.data.map((c) => c.name)).to.eql(["Gold", "Sunset Orange"]);
+          pm.expect(res.data.map((c) => c.opacity)).to.eql([60, 80]);
+      });
+
+      pm.test("5 colors make 3 pages, with links to pages 1 and 3", () => {
+          pm.expect(res.pagination.totalPages).to.eql(3);
+          pm.expect(res.pagination.prev).to.include("&sort=opacity&page=1&limit=2");
+          pm.expect(res.pagination.next).to.include("&sort=opacity&page=3&limit=2");
+      });
+
+      pm.test("query lists the page as one step after the sort", () => {
+          pm.expect(res.query[2]).to.eql({ page: 2, limit: 2 });
+      });
+    language: text/javascript
+order: 3000

@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{baseUrl}}/api/geo-data"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Nowhere"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const res = pm.response.json();
+
+      pm.test("Status is 400", () => {
+          pm.response.to.have.status(400);
+      });
+
+      pm.test("errors lists both missing fields", () => {
+          pm.expect(res.message).to.eql("Validation failed");
+          pm.expect(res.errors).to.eql({
+              latitude: "latitude is required",
+              longitude: "longitude is required",
+          });
+      });
+    language: text/javascript
+order: 5000
